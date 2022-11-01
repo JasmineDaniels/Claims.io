@@ -39,6 +39,10 @@ const userSchema = new Schema(
             unique: true,
         },
         meetings: [meetingSchema],
+        assignedAgent: {
+            type: Schema.Types.ObjectId,
+            ref: 'employee',
+        },
         userClaims: [
             {
                 type: Schema.Types.ObjectId,
