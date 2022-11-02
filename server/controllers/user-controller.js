@@ -1,4 +1,5 @@
 const { User } = require('../models');
+const { signToken, refreshToken } = require('../utils/auth');
 
 const createNewUser = async (req, res) => {
     console.log(req.body);
@@ -17,7 +18,7 @@ const userLogin = async (req, res) => {
     console.log(req.body)
     try {
         const user = await User.findOne({ 
-            $or: [{ policyNo: req.body.policyNo },{ firstName: req.body.firstName, lastName: req.body.lastName }, { email: req.body.email }] 
+            $or: [{ policyNo: req.body.policyNo },{ _id: req.body._id }, { email: req.body.email }] 
         });
         if (!user) {
         return res.status(400).json({ message: "Can't find this user" });
@@ -26,7 +27,10 @@ const userLogin = async (req, res) => {
         if (!checkPassword) {
             return res.status(400).json({ message: 'Wrong password!' });
         }
-        res.json({ message: `Verified user`, user}) // add Token
+        // const accessToken = signToken(user);
+        // const longToken = refreshToken(user)
+        // res.cookie('jwt', longToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+        res.json({ user }) // add Token
     } catch (error) {
         res.status(500).json({ message: `Server Error`, errorMessage: `${error}`})
     }  
@@ -59,7 +63,7 @@ const updateUser = async (req, res) => {
         );
         
         if(!updatedUser){
-            return res.status(404).json({ message: "This post doesn't exist."})
+            return res.status(404).json({ message: "This user doesn't exist."})
         } 
         res.json(updatedUser)
     } catch (error) {

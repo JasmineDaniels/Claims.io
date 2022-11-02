@@ -1,4 +1,5 @@
 const { model, Schema } = require('mongoose');
+const bcrypt = require('bcrypt');
 const meetingSchema = require('./Meeting');
 
 const employeeSchema = new Schema(
@@ -7,6 +8,10 @@ const employeeSchema = new Schema(
         lastName: String,
         email: String,
         role: Number,
+        password: {
+            type: String,
+            required: true,
+        },
         clients: [
             {
                 type: Schema.Types.ObjectId,
@@ -28,6 +33,27 @@ const employeeSchema = new Schema(
         id: false,
     },
 );
+
+employeeSchema.pre('save', async function (next) {
+    if (this.isNew) {
+      const saltRounds = 10;
+      this.password = await bcrypt.hash(this.password, saltRounds);
+    }
+  
+    next();
+});
+
+// employeeSchema.pre('findOneAndUpdate', function () {
+//     const saltRounds = 10;
+//     this._update.$set.password =  bcrypt.hashSync(this._update.$set.password, saltRounds)
+// });
+  
+  
+// custom method to compare and validate password for logging in
+employeeSchema.methods.checkPW = async function (password) {
+    const user = this
+    return bcrypt.compareSync(password, user.password);
+};
 
 const Employee = model('employee', employeeSchema);
 module.exports = Employee;
