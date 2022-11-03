@@ -5,11 +5,11 @@ const claimsSchema = new Schema(
         status: String, // in progress, payment issued, resolved
         totaled: Boolean,
         medium: String, //car, home, boat, etc
-        client: {
+        client_id: {
             type: Schema.Types.ObjectId,
             ref: 'user',
         },
-        specialist: {
+        agent_id: {
             type: Schema.Types.ObjectId,
             ref: 'employee',
         },

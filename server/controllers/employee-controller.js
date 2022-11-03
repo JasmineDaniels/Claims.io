@@ -2,12 +2,23 @@ const { Employee } = require('../models');
 
 const getAllEmployees = async (req, res) => {
     try {
-        const allEmployees = Employee.find({});
+        const allEmployees = await Employee.find({});
         res.json(allEmployees)
     } catch (error) {
         res.status(500).json(error)
     }
-    
+};
+
+const getAEmployee = async (req, res) => { //change for emp Sign In
+    console.log(req.body);
+    try {
+        const employee = await Employee.findOne({
+            $or: [{ email: req.body.email }, { _id: req.body._id }, { email: req.body.email }]
+        });
+        res.json(employee);
+    } catch (error) {
+        res.status(404).json({ message: `No Agent with is id`})
+    }
 };
 
 const createNewEmployee = async (req, res) => {
@@ -19,7 +30,7 @@ const createNewEmployee = async (req, res) => {
         }
         res.json(employee); // add token
     } catch (error) {
-        res.status(500).json({ message: `${error}`})
+        res.status(500).json({ message: `${error}` })
     }
 };
 
@@ -32,18 +43,19 @@ const updateEmployee = async (req, res) => {
             { $set: update },
             { runValidators: true, returnOriginal: false }
         );
-        
-        if(!updatedEmployee){
-            return res.status(404).json({ message: "This employee doesn't exist."})
-        } 
+
+        if (!updatedEmployee) {
+            return res.status(404).json({ message: "This employee doesn't exist." })
+        }
         res.json(updatedEmployee)
     } catch (error) {
-        res.status(500).json({ message: `Server Error`, errorMessage: `${error}`})
+        res.status(500).json({ message: `Server Error`, errorMessage: `${error}` })
     };
 };
 
 module.exports = {
     getAllEmployees,
+    getAEmployee,
     createNewEmployee,
     updateEmployee,
 }

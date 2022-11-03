@@ -1,6 +1,16 @@
 const { User } = require('../models');
 const { signToken, refreshToken } = require('../utils/auth');
 
+const getAllUsers = async (req, res) => {
+    try {
+        const allUsers = await User.find({});
+        res.json(allUsers)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: `Internal Server Error`})
+    }
+};
+
 const createNewUser = async (req, res) => {
     console.log(req.body);
     try {
@@ -12,7 +22,7 @@ const createNewUser = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: `${error}`})
     }
-}
+};
 
 const userLogin = async (req, res) => {
     console.log(req.body)
@@ -41,7 +51,7 @@ const getOneUser = async (req, res) => {
     try {
         const foundUser = await User.findOne({
             $or: [{ _id: req.body._id }, { policyNo: req.body.policyNo }],
-        });
+        }).populate('userClaims');
       
         if (!foundUser) {
         return res.status(400).json({ message: 'Cannot find a user with this id!' });
@@ -50,7 +60,7 @@ const getOneUser = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: `Server Error`, errorMessage: `${error}`})
     }
-}
+};
 
 const updateUser = async (req, res) => {
     console.log(req.body);
@@ -72,6 +82,7 @@ const updateUser = async (req, res) => {
 };
 
 module.exports = {
+    getAllUsers,
     createNewUser,
     userLogin,
     getOneUser,

@@ -22,7 +22,7 @@ An Express Node.js server runtime, JWT Access & Refresh token for sign in and en
 
 ### 1. Clone the repository above.
 ### 2. ` npm install ` to download dependencies.
-### 4. ` npm start ` for the server environment.
+### 3. ` npm start ` for the server environment.
 
 ## How to Use
 
@@ -35,7 +35,7 @@ An Express Node.js server runtime, JWT Access & Refresh token for sign in and en
 
 ## Future Development
 
-Claims.io will feature a React front-end with multiple user-agent interaction features, client and serve-side Authenication, and more, please stay tuned for more updates!
+Claims.io will feature a React front-end with multiple user-agent interaction features, client and server-side Authenication, and more, please stay tuned for more updates!
 
 ## License
 

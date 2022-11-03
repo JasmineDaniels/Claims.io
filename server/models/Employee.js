@@ -43,6 +43,8 @@ employeeSchema.pre('save', async function (next) {
     next();
 });
 
+
+//if (this._update.$set.password.isModified) { 
 // employeeSchema.pre('findOneAndUpdate', function () {
 //     const saltRounds = 10;
 //     this._update.$set.password =  bcrypt.hashSync(this._update.$set.password, saltRounds)
