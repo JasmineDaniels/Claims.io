@@ -57,7 +57,9 @@ const updateAClaim = async (req, res) => {
 const deleteAClaim = async (req, res) => {
     console.log(req.body);
     try {
-        await Claim.findByIdAndDelete({_id: req.body._id});
+        await Claim.findByIdAndDelete({_id: req.body._id})
+            .populate('agent_id')
+            .populate('client_id');
         const updateEmployee = await Employee.findByIdAndUpdate(
             {_id: req.body.agent_id},
             {$pull: { employeeClaims: req.body._id }},
