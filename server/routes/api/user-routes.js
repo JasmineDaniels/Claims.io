@@ -1,9 +1,9 @@
 const router = require('express').Router();
-
-const { getAllUsers, createNewUser, userLogin, getOneUser, updateUser } = require('../../controllers/user-controller')
+const { getAllUsers, createNewUser, userLogin, getOneUser, updateUser } = require('../../controllers/user-controller');
+const { authMiddleware }= require('../../utils/auth')
 
 router.route('/')
-    .get(getAllUsers)
+    .get(authMiddleware, getAllUsers)
     .post(createNewUser);
 
 router.route('/login').post(userLogin);
