@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-//const accessSecret = process.env.ACCESS_TOKEN_SECRET;
-const accessSecret = 'aWPYvhC^**Am@}VRADpB2?o]UM1os4';
+const accessSecret = process.env.ACCESS_TOKEN_SECRET;
 const refreshSecret = process.env.REFRESH_TOKEN_SECRET;
 
 module.exports = {
