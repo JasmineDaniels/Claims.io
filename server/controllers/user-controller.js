@@ -37,10 +37,10 @@ const userLogin = async (req, res) => {
         if (!checkPassword) {
             return res.status(400).json({ message: 'Wrong password!' });
         }
-        // const accessToken = signToken(user);
+        const accessToken = signToken(user);
         // const longToken = refreshToken(user)
         // res.cookie('jwt', longToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
-        res.json({ user }) // add Token
+        res.json({ accessToken, user }) // add Token
     } catch (error) {
         res.status(500).json({ message: `Server Error`, errorMessage: `${error}`})
     }  
