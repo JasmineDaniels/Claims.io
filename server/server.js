@@ -2,7 +2,7 @@ const express = require('express');
 require('dotenv').config();
 const path = require('path');
 const db = require('./config/connection');
-//const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 const routes = require('./routes');
 
 const app = express();
@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
+app.use(cookieParser())
 // if we're in production, serve client/build as static assets
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));

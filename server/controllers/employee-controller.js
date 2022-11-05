@@ -23,12 +23,20 @@ const getAEmployee = async (req, res) => { //change for emp Sign In
 
 const createNewEmployee = async (req, res) => {
     console.log(req.body);
+    // const newEmployee = {
+    //     role: 
+    // }
     try {
         const employee = await Employee.create(req.body);
         if (!employee) {
             return res.status(400).json({ message: 'Duplicate entry' });
         }
-        res.json(employee); // add token
+        const checkPassword = await employee.checkPW(req.body.password);
+        if (!checkPassword) {
+            return res.status(400).json({ message: 'Wrong password!' });
+        }
+        const accessToken = signToken(employee);
+        res.json({accessToken, employee}); // add token
     } catch (error) {
         res.status(500).json({ message: `${error}` })
     }

@@ -33,6 +33,13 @@ const userSchema = new Schema(
             type: String,
             required: true,
         },
+        refreshToken: String,
+        role: {
+            User: {
+                type: Number,
+                default: 2001,
+            },
+        },
         policyNo: {
             type: String,
             default: uuidv4,

@@ -4,10 +4,11 @@ require('dotenv').config();
 const accessSecret = process.env.ACCESS_TOKEN_SECRET;
 const refreshSecret = process.env.REFRESH_TOKEN_SECRET;
 
+//add credentials middleware 
 module.exports = {
     // function for our authenticated routes
     authMiddleware: function (req, res, next) {
-      let token = req.headers.authorization;
+      let token = req.headers.authorization || req.headers.Authorization;
   
       // ["Bearer", "<tokenvalue>"]
       if (req.headers.authorization) {
@@ -28,20 +29,18 @@ module.exports = {
         console.log('Invalid token');
         return res.status(403).json({ message: 'invalid token!' });
       }
-
-      // jwt.verify(
-      //   token, 
-      //   accessSecret,
-      //   { maxAge: '15m'},
-      //   (err, decoded) => {
-      //     if (err) return res.status(403);
-      //     req.user = decoded.email;
-      //     next();
-      //   });
   
       // send to next endpoint
       next();
     },
+    // refreshMiddleware: function (req, res, next){
+    //   const cookies = req.cookies;
+    //   console.log(cookies);
+    //   if(!cookies.jwt) {
+    //     return res.status(401);
+    //   }
+    //   const refreshToken = cookies.jwt;
+    // },
     signToken: function ({ email, _id }) {
       const payload = { email, _id };
   
@@ -50,6 +49,6 @@ module.exports = {
     refreshToken: function ({ email, _id }) {
         const payload = { email, _id };
     
-        return jwt.sign({ data: payload }, refreshSecret, { expiresIn: '1d' });
+        return jwt.sign({ data: payload }, refreshSecret, { expiresIn: '5m' });
     },
 };

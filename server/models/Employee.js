@@ -7,10 +7,20 @@ const employeeSchema = new Schema(
         firstName: String,
         lastName: String,
         email: String,
-        role: Number,
+        refreshToken: String,
         password: {
             type: String,
             required: true,
+        },
+        role: {
+            User: {
+                type: Number,
+                default: 2001,
+            },
+            Agent: {
+                type: Number,
+                default: 1984,
+            }
         },
         clients: [
             {
