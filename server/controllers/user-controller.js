@@ -1,6 +1,8 @@
 const { User } = require('../models');
 const { signToken, refreshToken } = require('../utils/auth');
 const jwt = require('jsonwebtoken');
+const path = require('path')
+require('dotenv').config({path: path.resolve(__dirname, '../.env')})
 
 const getAllUsers = async (req, res) => {
     try {
@@ -41,15 +43,15 @@ const userLogin = async (req, res) => {
         const accessToken = signToken(user);
         const longToken = refreshToken(user) //save refresh to db
         //const refreshUser = await user.update({ refreshToken: longToken })
-        const refreshUser = await User.updateOne({ user },{ refreshToken: longToken })
+        const refreshUser = await User.updateOne({ user }, { refreshToken: longToken });
         res.cookie('jwt', longToken, {
             httpOnly: true,
             sameSite: 'None',
             secure: true,
             maxAge: 24 * 60 * 60 * 1000
-        }); 
+        });
         res.json({ accessToken, user })
-        
+
     } catch (error) {
         res.status(500).json({ message: `Server Error`, errorMessage: `${error}` })
     }
@@ -59,14 +61,14 @@ const refreshUserToken = async (req, res) => {
     try {
         //const cookies = req.cookies;
         let cookies = req.headers.cookie;
-        console.log(cookies, `req.cookies`);
+        //console.log(cookies, `req.cookies`);
         //if cookies & if cookies has jwt property
         if (!cookies) {
             return res.status(401);
         }
         //console.log(cookies.jwt, `cookies.jwt`);
         const refreshToken = cookies;
-        const foundUser = await User.find({ refreshToken: refreshToken });
+        const foundUser = await User.findOne({ refreshToken: refreshToken });
         if (!foundUser) {
             return res.status(403);
         }
@@ -79,12 +81,42 @@ const refreshUserToken = async (req, res) => {
         res.json({ accessToken, foundUser })
     } catch (error) {
         console.log(error)
-        res.status(500).json({ message: `Internal Server Error`})
+        res.status(500).json({ message: `Internal Server Error` })
     }
 
-}
+};
 
 const userLogout = async (req, res) => {
+    try {
+        //on client delete access token from memory 
+        let cookies = req.headers.cookie;
+        if (!cookies) {
+            return res.status(204); //Successful No Content
+        }
+        const refreshToken = cookies;
+        const foundUser = await User.find({ refreshToken: refreshToken });
+        if (!foundUser) {
+            res.clearCookie('jwt', {
+                httpOnly: true,
+                sameSite: 'None',
+                secure: true,
+                maxAge: 24 * 60 * 60 * 1000
+            })
+            return res.status(404).json({ message: `Could not find user`});
+        }
+
+        const deleteRFToken = await User.updateOne({ foundUser }, { refreshToken: '' })
+        res.clearCookie('jwt', {
+            httpOnly: true,
+            sameSite: 'None',
+            secure: true,
+            maxAge: 24 * 60 * 60 * 1000
+        })
+        res.status(200).json({message: `User successfully logged out`});
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: `Internal Server Error` })
+    }
 
 };
 
@@ -128,6 +160,7 @@ module.exports = {
     createNewUser,
     userLogin,
     refreshUserToken,
+    userLogout,
     getOneUser,
     updateUser,
 }
