@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const path = require('path')
+require('dotenv').config({path: path.resolve(__dirname, '../.env')});
 
 const accessSecret = process.env.ACCESS_TOKEN_SECRET;
 const refreshSecret = process.env.REFRESH_TOKEN_SECRET;
