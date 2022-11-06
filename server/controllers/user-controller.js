@@ -103,6 +103,7 @@ const userLogout = async (req, res) => {
                 maxAge: 24 * 60 * 60 * 1000
             })
             return res.status(404).json({ message: `Could not find user`});
+            // return res.sendStatus(204);
         }
 
         const deleteRFToken = await User.updateOne({ foundUser }, { refreshToken: '' })
@@ -113,6 +114,8 @@ const userLogout = async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000
         })
         res.status(200).json({message: `User successfully logged out`});
+        // res.sendStatus(204);
+
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: `Internal Server Error` })
@@ -138,10 +141,11 @@ const getOneUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
     console.log(req.body);
+    
     try {
-        const update = req.body;
+        const update = req.body.user;
         const updatedUser = await User.findOneAndUpdate(
-            { _id: req.body._id },
+            { _id: update._id },
             { $set: update },
             { runValidators: true, returnOriginal: false }
         );

@@ -2,7 +2,7 @@
 
 ## Description
 
-Claims.io is a RESTful API designed for the insurance space (currently in development), (front-end is in prod), curated to sign up new clients, assign them to agents, and retain secure client and policy data.
+Claims.io is a RESTful API designed for the insurance space (currently in development), curated to sign up new clients, assign them to agents, manage claims, and retain secure client and policy data.
 
 An Express Node.js server runtime, JWT Access & Refresh token for sign in and encrypted data sent over the API (currently in development), brcrypt password hashing and decoding, with server side validation. Data is currently stored locally on a MongoDB database with mongoose ODM, application will be hosted within the week!
 
