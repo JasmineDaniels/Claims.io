@@ -1,8 +1,9 @@
-const { Employee } = require('../models');
+const { Employee, User } = require('../models');
 const { signToken, refreshToken } = require('../utils/auth');
 const jwt = require('jsonwebtoken');
-const path = require('path')
-require('dotenv').config({path: path.resolve(__dirname, '../.env')})
+const path = require('path');
+const { findClients } = require('../utils/helpers');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 
 const getAllEmployees = async (req, res) => {
     try {
@@ -21,11 +22,11 @@ const getOneEmployee = async (req, res) => { //change for emp Sign In
         });
         res.json(employee);
     } catch (error) {
-        res.status(404).json({ message: `No Agent with is id`})
+        res.status(404).json({ message: `No Agent with is id` })
     }
 };
 
-const createNewEmployee = async (req, res) => {
+const createNewEmployee = async (req, res) => { // admin + auth 
     console.log(req.body);
     // const newEmployee = {
     //     role: 
@@ -35,12 +36,8 @@ const createNewEmployee = async (req, res) => {
         if (!employee) {
             return res.status(400).json({ message: 'Duplicate entry' });
         }
-        const checkPassword = await employee.checkPW(req.body.password);
-        if (!checkPassword) {
-            return res.status(400).json({ message: 'Wrong password!' });
-        }
-        const accessToken = signToken(employee);
-        res.json({accessToken, employee}); // add token
+        // const accessToken = signToken(employee);
+        res.json(employee); // add token
     } catch (error) {
         res.status(500).json({ message: `${error}` })
     }
@@ -60,7 +57,7 @@ const employeeLogin = async (req, res) => {
             return res.status(400).json({ message: 'Wrong password!' });
         }
         const accessToken = signToken(employee);
-        const longToken = refreshToken(employee) //save refresh to db
+        const longToken = refreshToken(employee) 
         //const refreshemployee = await employee.update({ refreshToken: longToken })
         const refreshemployee = await Employee.updateOne({ employee }, { refreshToken: longToken });
         res.cookie('jwt', longToken, {
@@ -76,6 +73,34 @@ const employeeLogin = async (req, res) => {
     }
 };
 
+const refreshEmployeeToken = async (req, res) => {
+    try {
+        //const cookies = req.cookies;
+        let cookies = req.headers.cookie;
+        //console.log(cookies, `req.cookies`);
+        //if cookies & if cookies has jwt property
+        if (!cookies) {
+            return res.status(401);
+        }
+        //console.log(cookies.jwt, `cookies.jwt`);
+        const refreshToken = cookies;
+        const foundEmployee = await Employee.findOne({ refreshToken: refreshToken });
+        if (!foundEmployee) {
+            return res.status(403);
+        }
+
+        const verifyRefresh = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+        if (!verifyRefresh) {
+            return res.status(403);
+        }
+        const accessToken = signToken(foundEmployee);
+        res.json({ accessToken, foundEmployee })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: `Internal Server Error` })
+    }
+};
+
 const employeeLogout = async (req, res) => {
     try {
         //on client delete access token from memory 
@@ -84,26 +109,26 @@ const employeeLogout = async (req, res) => {
             return res.status(204); //Successful No Content
         }
         const refreshToken = cookies;
-        const foundUser = await Employee.find({ refreshToken: refreshToken });
-        if (!foundUser) {
+        const foundEmployee = await Employee.find({ refreshToken: refreshToken });
+        if (!foundEmployee) {
             res.clearCookie('jwt', {
                 httpOnly: true,
                 sameSite: 'None',
                 secure: true,
                 maxAge: 24 * 60 * 60 * 1000
             })
-            return res.status(404).json({ message: `Could not find user`});
+            return res.status(404).json({ message: `Could not find user` });
             // return res.sendStatus(204);
         }
 
-        const deleteRFToken = await Employee.updateOne({ foundUser }, { refreshToken: '' })
+        const deleteRFToken = await Employee.updateOne({ foundEmployee }, { refreshToken: '' })
         res.clearCookie('jwt', {
             httpOnly: true,
             sameSite: 'None',
             secure: true,
             maxAge: 24 * 60 * 60 * 1000
         })
-        res.status(200).json({message: `User successfully logged out`});
+        res.status(200).json({ message: `Employee successfully logged out` });
         // res.sendStatus(204);
 
     } catch (error) {
@@ -131,21 +156,49 @@ const updateEmployee = async (req, res) => {
     };
 };
 
-const addClient = async (req, res) => {
+const deleteEmployee = async (req, res) => { // admin + auth
+    try {
+        // assign claims and clients assoc. with this emp a new agent
+        const employee = await Employee.deleteOne({ $or: [{ _id: req.body._id }, { email: req.body.email }] });
+        if (!employee) {
+            return res.status(400).json({ message: "Can't find this employee" });
+        }; 
+        res.sendStatus(204);
+    } catch (error) {
+        res.status(500).json({ message: `Server Error`, errorMessage: `${error}` })
+    }
+};
+
+const addClient = async (req, res) => { // make multiple $in: - array of clients
     try {
         const employeeData = req.body.user;
         const clientData = req.body.clients;
         const foundEmployee = await Employee.findByIdAndUpdate(
             { _id: employeeData._id },
-            {$addToSet: { clients: clientData._id}},
+            { $addToSet: { clients: clientData._id } },
             { runValidators: true, returnOriginal: false }
         );
         if (!foundEmployee) {
             return res.status(404).json({ message: "This employee doesn't exist." })
         }
+        const updateClient = await User.updateOne({_id: clientData._id}, { assignedAgent: employeeData._id})
         res.json(foundEmployee)
     } catch (error) {
         res.status(500).json({ message: `Server Error`, errorMessage: `${error}` })
+    }
+};
+
+const getClients = async (req, res) => {
+    const employeeData = req.body.user;
+    const clientData = req.body.clients;
+    try {
+        const clients = await findClients(employeeData)
+        if (!clients){
+            return res.status(404).json({ message: `This employee has no clients`});
+        }
+        res.json(clients)
+    } catch (error) {
+        res.status(500).json({ message: `Server Error`, errorMessage: `${error}` });
     }
 };
 
@@ -155,7 +208,7 @@ const removeClient = async (req, res) => {
         const clientData = req.body.clients;
         const foundEmployee = await Employee.findByIdAndUpdate(
             { _id: employeeData._id },
-            {$pull: { clients: clientData._id}},
+            { $pull: { clients: clientData._id } },
             { runValidators: true, returnOriginal: false }
         );
         if (!foundEmployee) {
@@ -172,9 +225,12 @@ module.exports = {
     getAllEmployees,
     getOneEmployee,
     createNewEmployee,
+    refreshEmployeeToken, // make middleware?
     employeeLogin,
     employeeLogout,
     updateEmployee,
+    deleteEmployee,
     addClient,
+    getClients,
     removeClient
 }

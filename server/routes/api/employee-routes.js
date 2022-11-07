@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getAllEmployees, getOneEmployee, createNewEmployee, employeeLogin, employeeLogout, updateEmployee, addClient, removeClient } = require('../../controllers/employee-controller');
+const { getAllEmployees, getOneEmployee, createNewEmployee, employeeLogin, employeeLogout, updateEmployee, addClient, removeClient, getClients } = require('../../controllers/employee-controller');
 const { getAClaim, createAClaim, updateAClaim, deleteAClaim } = require('../../controllers/claims-controller');
 const { updateUser } = require('../../controllers/user-controller');
 const { authMiddleware }= require('../../utils/auth');
@@ -19,6 +19,7 @@ router.route('/agent')
     .delete() //delete A employee
 
 router.route('/client') //add auth
+    .get(getClients)
     .post(addClient)
     .put(updateUser)
     .delete(removeClient)
