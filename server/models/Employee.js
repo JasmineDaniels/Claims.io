@@ -1,17 +1,34 @@
 const { model, Schema } = require('mongoose');
 const bcrypt = require('bcrypt');
-const meetingSchema = require('./Meeting');
+
+function validateEmail(email){
+    const re = /^([a-z0-9A-Z\d\.-_]+)@([a-z\d-]+)\.([a-z]{2,6})?$/
+    return re.test(email)
+}
 
 const employeeSchema = new Schema(
     {
-        firstName: String,
-        lastName: String,
-        email: String,
-        refreshToken: String,
+        firstName: {
+            type: String,
+            required: true,
+        },
+        lastName: {
+            type: String,
+            required: true,
+        },
+        email: {
+            type: String,
+            required: true,
+            trim: true,
+            unique: true,
+            validate: [validateEmail, `Please enter valid email address`],
+        },
         password: {
             type: String,
             required: true,
         },
+        phoneNo: String,
+        refreshToken: String,
         role: {
             User: {
                 type: Number,
@@ -20,7 +37,8 @@ const employeeSchema = new Schema(
             Agent: {
                 type: Number,
                 default: 1984,
-            }
+            },
+            Admin: Number
         },
         clients: [
             {
@@ -34,7 +52,10 @@ const employeeSchema = new Schema(
                 ref: 'claims',
             },
         ],
-        meetings: [meetingSchema],
+        createdAt: {
+            type: Date,
+            default: Date.now
+        }, 
     },
     {
         toJSON: {

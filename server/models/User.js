@@ -1,7 +1,6 @@
 const { model, Schema } = require('mongoose');
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
-const meetingSchema = require('./Meeting');
 
 function validateEmail(email){
     const re = /^([a-z0-9A-Z\d\.-_]+)@([a-z\d-]+)\.([a-z]{2,6})?$/
@@ -18,10 +17,6 @@ const userSchema = new Schema(
             type: String,
             required: true,
         },
-        phoneNo: {
-            type: String,
-            required: true,
-        },
         email: {
             type: String,
             required: true,
@@ -33,6 +28,7 @@ const userSchema = new Schema(
             type: String,
             required: true,
         },
+        phoneNo: String,
         refreshToken: String,
         role: {
             User: {
@@ -45,7 +41,6 @@ const userSchema = new Schema(
             default: uuidv4,
             unique: true,
         },
-        meetings: [meetingSchema],
         assignedAgent: {
             type: Schema.Types.ObjectId,
             ref: 'employee',
