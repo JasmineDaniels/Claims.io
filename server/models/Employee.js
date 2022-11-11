@@ -74,12 +74,34 @@ employeeSchema.pre('save', async function (next) {
     next();
 });
 
-
 //if (this._update.$set.password.isModified) { 
 // employeeSchema.pre('findOneAndUpdate', function () {
 //     const saltRounds = 10;
 //     this._update.$set.password =  bcrypt.hashSync(this._update.$set.password, saltRounds)
 // });
+
+//seed employees middleware
+employeeSchema.pre('insertMany', async function (next, docs){
+    if (Array.isArray(docs) && docs.length){
+        const hashedUsers = docs.map(async (user) => {
+            return await new Promise((resolve, reject) => {
+               bcrypt.genSalt(10).then((salt) => {
+                let password = user.password.toString()
+                bcrypt.hash(password, salt).then(hash => {
+                    user.password = hash
+                    resolve(user)
+                }).catch(e => {
+                    reject(e)
+                })
+               })
+            })
+        })
+        docs = await Promise.all(hashedUsers)
+        next()
+    } else {
+        return next(new Error('Employee list should not be empty'))
+    }
+})
   
   
 // custom method to compare and validate password for logging in

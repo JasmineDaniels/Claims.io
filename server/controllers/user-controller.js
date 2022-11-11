@@ -159,6 +159,27 @@ const updateUser = async (req, res) => {
     };
 };
 
+// const deleteUser = async (req, res) => { 
+//     const employeeData = req.body.user;
+//     const clientData = req.body.clients;
+//     try {
+//         // Note: check if all claims status is closed 
+//         const user = await User.deleteOne({ $or: [{ _id: req.body._id }, { email: req.body.email }] });
+//         if (!user) {
+//             return res.status(400).json({ message: "Can't find this user" });
+//         }; 
+//         // remove user from employee roster
+//         const foundEmployee = await Employee.findByIdAndUpdate(
+//             { _id: employeeData._id },
+//             { $pull: { clients: clientData._id } },
+//             { runValidators: true, returnOriginal: false }
+//         );
+//         res.sendStatus(204);
+//     } catch (error) {
+//         res.status(500).json({ message: `Server Error`, errorMessage: `${error}` })
+//     }
+// };
+
 module.exports = {
     getAllUsers,
     createNewUser,
