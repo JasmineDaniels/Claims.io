@@ -1,8 +1,8 @@
 const { connect, connection } = require('mongoose');
-//const mongoose = require('mongoose');
-require('dotenv').config();
+const path = require('path')
+require('dotenv').config({path: path.resolve(__dirname, '../.env')});
 
-connect( 'mongodb://127.0.0.1:27017/claimsDB', {
+connect( process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/claimsDB', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
