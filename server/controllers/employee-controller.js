@@ -1,5 +1,6 @@
 const { Employee, User } = require('../models');
 const { signToken, refreshToken } = require('../utils/auth');
+const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const { findClients } = require('../utils/helpers');
@@ -28,13 +29,12 @@ const getOneEmployee = async (req, res) => { //change for emp Sign In
 
 const createNewEmployee = async (req, res) => { // admin + auth 
     console.log(req.body);
-    // const newEmployee = {
-    //     role: 
-    // }
     try {
+        const duplicate = await Employee.findOne({ email: req.body.email}).exec();
+        if (duplicate) return res.sendStatus(409);
         const employee = await Employee.create(req.body);
         if (!employee) {
-            return res.status(400).json({ message: 'Duplicate entry' });
+            return res.status(400).json({ message: 'Please enter a valid Email' });
         }
         // const accessToken = signToken(employee);
         res.json(employee); // add token
@@ -47,19 +47,20 @@ const employeeLogin = async (req, res) => {
     console.log(req.body)
     try {
         const employee = await Employee.findOne({
-            $or: [{ policyNo: req.body.policyNo }, { _id: req.body._id }, { email: req.body.email }]
-        });
+            $or: [{ _id: req.body._id }, { email: req.body.email }]
+        }).lean();
         if (!employee) {
             return res.status(400).json({ message: "Can't find this employee" });
         }
-        const checkPassword = await employee.checkPW(req.body.password);
+        //const checkPassword = await employee.checkPW(req.body.password);
+        const checkPassword = await bcrypt.compare(req.body.password, employee.password);
         if (!checkPassword) {
             return res.status(400).json({ message: 'Wrong password!' });
         }
         const accessToken = signToken(employee);
         const longToken = refreshToken(employee) 
         //const refreshemployee = await employee.update({ refreshToken: longToken })
-        const refreshemployee = await Employee.updateOne({ employee }, { refreshToken: longToken });
+        const refreshemployee = await Employee.updateOne(employee, { refreshToken: longToken });
         res.cookie('jwt', longToken, {
             httpOnly: true,
             sameSite: 'None',
@@ -80,18 +81,18 @@ const refreshEmployeeToken = async (req, res) => {
         //console.log(cookies, `req.cookies`);
         //if cookies & if cookies has jwt property
         if (!cookies) {
-            return res.status(401);
+            return res.sendStatus(401);
         }
         //console.log(cookies.jwt, `cookies.jwt`);
         const refreshToken = cookies;
-        const foundEmployee = await Employee.findOne({ refreshToken: refreshToken });
+        const foundEmployee = await Employee.findOne({ refreshToken: refreshToken }).lean();
         if (!foundEmployee) {
-            return res.status(403);
+            return res.sendStatus(403);
         }
 
         const verifyRefresh = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
         if (!verifyRefresh) {
-            return res.status(403);
+            return res.sendStatus(403);
         }
         const accessToken = signToken(foundEmployee);
         res.json({ accessToken, foundEmployee })

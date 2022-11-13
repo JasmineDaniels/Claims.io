@@ -105,10 +105,15 @@ employeeSchema.pre('insertMany', async function (next, docs){
   
   
 // custom method to compare and validate password for logging in
-employeeSchema.methods.checkPW = async function (password) {
-    const user = this
-    return bcrypt.compareSync(password, user.password);
-};
+// employeeSchema.methods.checkPW = async function (password) {
+//     const user = this
+//     return bcrypt.compareSync(password, user.password);
+// };
+
+// employeeSchema.methods.checkPW = async function (password) {
+//     const user = this
+//     return bcrypt.compare(password, user.password);
+// };
 
 const Employee = model('employee', employeeSchema);
 module.exports = Employee;

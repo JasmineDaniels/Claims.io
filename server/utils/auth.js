@@ -42,8 +42,8 @@ module.exports = {
     //   }
     //   const refreshToken = cookies.jwt;
     // },
-    signToken: function ({ email, _id }) {
-      const payload = { email, _id };
+    signToken: function ({ email, _id, role }) {
+      const payload = { email, _id, role };
   
       return jwt.sign({ data: payload }, accessSecret, { expiresIn: '2m' });
     },
