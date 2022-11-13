@@ -12,7 +12,7 @@ router.route('/logout').get(userLogout);
 
 router.route('/user') //change to _id params
     .get(authMiddleware, getOneUser)
-    .put(updateUser);
+    .put( authMiddleware, updateUser);
     // .delete(authMiddleware, deleteUser);
 
 

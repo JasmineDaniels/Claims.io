@@ -1,5 +1,14 @@
 const { Claim, Employee, User } = require('../models');
 
+const getAllClaims = async (req, res) => {
+    try {
+        const allClaims = await Claim.find({});
+        res.json(allClaims)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+};
+
 const createAClaim = async (req, res) => {
     console.log(req.body);
     try {
@@ -27,7 +36,9 @@ const createAClaim = async (req, res) => {
 const getAClaim = async (req, res) => {
     console.log(req.body);
     try {
-        const claim = await Claim.findOne({ _id: req.body._id });
+        const claim = await Claim.findOne({ _id: req.body._id })
+            .populate('agent_id')
+            .populate('client_id');
         claim ? res.json(claim) : res.status(404).json({ message: `No claim with this id ${req.body._id}`})
     } catch (error) {
         console.log(error)
@@ -58,8 +69,6 @@ const deleteAClaim = async (req, res) => {
     console.log(req.body);
     try {
         await Claim.findByIdAndDelete({_id: req.body._id})
-            .populate('agent_id')
-            .populate('client_id');
         const updateEmployee = await Employee.findByIdAndUpdate(
             {_id: req.body.agent_id},
             {$pull: { employeeClaims: req.body._id }},
@@ -81,6 +90,7 @@ const deleteAClaim = async (req, res) => {
 };
 
 module.exports = {
+    getAllClaims,
     createAClaim,
     getAClaim,
     updateAClaim,

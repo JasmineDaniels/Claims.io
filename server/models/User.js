@@ -48,7 +48,7 @@ const userSchema = new Schema(
         userClaims: [
             {
                 type: Schema.Types.ObjectId,
-                ref: 'claims',
+                ref: 'claim',
             },
         ],
         createdAt: {

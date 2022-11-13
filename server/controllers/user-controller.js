@@ -17,6 +17,7 @@ const getAllUsers = async (req, res) => {
 const createNewUser = async (req, res) => {
     console.log(req.body);
     try {
+        
         const user = await User.create(req.body);
         if (!user) {
             return res.status(400).json({ message: 'Duplicate entry' });
@@ -40,10 +41,11 @@ const userLogin = async (req, res) => {
         if (!checkPassword) {
             return res.status(400).json({ message: 'Wrong password!' });
         }
+        //const roles = Object.values(user.role)
         const accessToken = signToken(user);
         const longToken = refreshToken(user) //save refresh to db
         //const refreshUser = await user.update({ refreshToken: longToken })
-        const refreshUser = await User.updateOne({ user }, { refreshToken: longToken });
+        const refreshUser = await User.updateOne(user , { refreshToken: longToken });
         res.cookie('jwt', longToken, {
             httpOnly: true,
             sameSite: 'None',
@@ -59,24 +61,25 @@ const userLogin = async (req, res) => {
 
 const refreshUserToken = async (req, res) => {
     try {
-        //const cookies = req.cookies;
+        //let cookies = req.cookies;
         let cookies = req.headers.cookie;
-        //console.log(cookies, `req.cookies`);
+        console.log(cookies, `req.cookies`);
         //if cookies & if cookies has jwt property
         if (!cookies) {
-            return res.status(401);
+            return res.sendStatus(401);
         }
         //console.log(cookies.jwt, `cookies.jwt`);
         const refreshToken = cookies;
         const foundUser = await User.findOne({ refreshToken: refreshToken });
         if (!foundUser) {
-            return res.status(403);
+            return res.sendStatus(403);
         }
 
         const verifyRefresh = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
         if (!verifyRefresh) {
-            return res.status(403);
+            return res.sendStatus(403);
         }
+        //const roles = Object.values(foundUser.role);
         const accessToken = signToken(foundUser);
         res.json({ accessToken, foundUser })
     } catch (error) {
@@ -88,10 +91,11 @@ const refreshUserToken = async (req, res) => {
 
 const userLogout = async (req, res) => {
     try {
-        //on client delete access token from memory 
+        //on client delete access token from memory
+        //let cookies = req.cookies 
         let cookies = req.headers.cookie;
         if (!cookies) {
-            return res.status(204); //Successful No Content
+            return res.sendStatus(204); //Successful No Content
         }
         const refreshToken = cookies;
         const foundUser = await User.find({ refreshToken: refreshToken });
