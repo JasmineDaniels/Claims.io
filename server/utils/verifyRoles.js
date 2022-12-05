@@ -1,15 +1,12 @@
 const verifyRoles = (...allowedRoles) => {
     return (req, res, next) => {
         const { data } = req.user;
-        console.log(data);
         if (!data.role) return res.sendStatus(401);
         const rolesArray = [...allowedRoles];
-        console.log(rolesArray); // roles that are allowed
-        console.log(data.role); //roles from jwt
+        // console.log(`roles that are allowed`, rolesArray); 
+        // console.log(`roles from jwt access token`, data.role); 
         const userRoles = Object.values(data.role)
-        console.log(userRoles)
-        //const result = data.role.map(role => rolesArray.includes(role)).find(val => val === true);
-        const result = rolesArray.includes(userRoles).find(val => val === true);
+        const result = userRoles.map(role => rolesArray.includes(role)).find(val => val === true);
         if (!result) return res.sendStatus(401);
         next();
     }

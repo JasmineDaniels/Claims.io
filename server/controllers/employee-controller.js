@@ -1,5 +1,5 @@
 const { Employee, User } = require('../models');
-const { signToken, refreshToken } = require('../utils/auth');
+const { signToken, signRefreshToken } = require('../utils/auth');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const path = require('path');
@@ -28,7 +28,7 @@ const getOneEmployee = async (req, res) => { //change for emp Sign In
 };
 
 const createNewEmployee = async (req, res) => { // admin + auth 
-    console.log(req.body);
+    //console.log(req.body);
     try {
         const duplicate = await Employee.findOne({ email: req.body.email}).exec();
         if (duplicate) return res.sendStatus(409);
@@ -44,11 +44,10 @@ const createNewEmployee = async (req, res) => { // admin + auth
 };
 
 const employeeLogin = async (req, res) => {
-    console.log(req.body)
     try {
         const employee = await Employee.findOne({
             $or: [{ _id: req.body._id }, { email: req.body.email }]
-        }).lean();
+        }).exec();
         if (!employee) {
             return res.status(400).json({ message: "Can't find this employee" });
         }
@@ -58,16 +57,19 @@ const employeeLogin = async (req, res) => {
             return res.status(400).json({ message: 'Wrong password!' });
         }
         const accessToken = signToken(employee);
-        const longToken = refreshToken(employee) 
-        //const refreshemployee = await employee.update({ refreshToken: longToken })
-        const refreshemployee = await Employee.updateOne(employee, { refreshToken: longToken });
-        res.cookie('jwt', longToken, {
+        const refreshToken = signRefreshToken(employee) 
+
+        //save refresh token to DB
+        employee.refreshToken = refreshToken;
+        const result = await employee.save();
+
+        res.cookie('jwt', refreshToken, { //Put secure: true in PRODUCTION!
             httpOnly: true,
             sameSite: 'None',
             secure: true,
             maxAge: 24 * 60 * 60 * 1000
         });
-        res.json({ accessToken, employee })
+        res.json({ accessToken, result }) 
 
     } catch (error) {
         res.status(500).json({ message: `Server Error`, errorMessage: `${error}` })
@@ -75,25 +77,26 @@ const employeeLogin = async (req, res) => {
 };
 
 const refreshEmployeeToken = async (req, res) => {
+    console.log(`This is employee req.cookies`, req.cookies)
     try {
-        //const cookies = req.cookies;
-        let cookies = req.headers.cookie;
-        //console.log(cookies, `req.cookies`);
+        const cookies = req.cookies.jwt;
         //if cookies & if cookies has jwt property
         if (!cookies) {
             return res.sendStatus(401);
         }
-        //console.log(cookies.jwt, `cookies.jwt`);
+
         const refreshToken = cookies;
-        const foundEmployee = await Employee.findOne({ refreshToken: refreshToken }).lean();
+        const foundEmployee = await Employee.findOne({ refreshToken: refreshToken }).exec();
         if (!foundEmployee) {
-            return res.sendStatus(403);
+            return res.status(404).json({message: `Could not find user`})
+            //return res.sendStatus(404);
         }
 
         const verifyRefresh = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
         if (!verifyRefresh) {
-            return res.sendStatus(403);
+            return res.sendStatus(403); //Forbidden
         }
+        //get new access token
         const accessToken = signToken(foundEmployee);
         res.json({ accessToken, foundEmployee })
     } catch (error) {
@@ -103,14 +106,16 @@ const refreshEmployeeToken = async (req, res) => {
 };
 
 const employeeLogout = async (req, res) => {
+    console.log(`this is req.cookies`, req.cookies)
     try {
-        //on client delete access token from memory 
-        let cookies = req.headers.cookie;
+        //On client delete access token from memory 
+        let cookies = req.cookies.jwt;
         if (!cookies) {
             return res.status(204); //Successful No Content
         }
         const refreshToken = cookies;
-        const foundEmployee = await Employee.find({ refreshToken: refreshToken });
+        //const foundEmployee = await Employee.find({ refreshToken: refreshToken });
+        const foundEmployee = await Employee.findOne({ refreshToken: refreshToken }).exec();
         if (!foundEmployee) {
             res.clearCookie('jwt', {
                 httpOnly: true,
@@ -122,7 +127,9 @@ const employeeLogout = async (req, res) => {
             // return res.sendStatus(204);
         }
 
-        const deleteRFToken = await Employee.updateOne({ foundEmployee }, { refreshToken: '' })
+        foundEmployee.refreshToken = '';
+        const result = await foundEmployee.save();
+        //console.log(result);
         res.clearCookie('jwt', {
             httpOnly: true,
             sameSite: 'None',

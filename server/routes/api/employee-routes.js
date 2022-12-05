@@ -24,7 +24,7 @@ router.route('/agent') //:_id
 
 router.route('/client') //add auth
     .get(getClients) 
-    .post(addClient) 
+    .post(authMiddleware, addClient) 
     .put(updateUser)
     .delete(removeClient)
 

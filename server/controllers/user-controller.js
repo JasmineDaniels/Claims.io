@@ -1,5 +1,5 @@
 const { User } = require('../models');
-const { signToken, refreshToken } = require('../utils/auth');
+const { signToken, signRefreshToken } = require('../utils/auth');
 const jwt = require('jsonwebtoken');
 const path = require('path')
 require('dotenv').config({path: path.resolve(__dirname, '../.env')})
@@ -33,7 +33,7 @@ const userLogin = async (req, res) => {
     try {
         const user = await User.findOne({
             $or: [{ policyNo: req.body.policyNo }, { _id: req.body._id }, { email: req.body.email }]
-        });
+        }).exec();
         if (!user) {
             return res.status(400).json({ message: "Can't find this user" });
         }
@@ -43,16 +43,21 @@ const userLogin = async (req, res) => {
         }
         //const roles = Object.values(user.role)
         const accessToken = signToken(user);
-        const longToken = refreshToken(user) //save refresh to db
-        //const refreshUser = await user.update({ refreshToken: longToken })
-        const refreshUser = await User.updateOne(user , { refreshToken: longToken });
-        res.cookie('jwt', longToken, {
+        const refreshToken = signRefreshToken(user) 
+        //const refreshUser = await user.update({ refreshToken: refreshToken })
+        //const refreshUser = await User.updateOne(user , { refreshToken: refreshToken });
+
+        //save refresh token to DB
+        user.refreshToken = refreshToken;
+        const result = await user.save();
+
+        res.cookie('jwt', refreshToken, {
             httpOnly: true,
             sameSite: 'None',
             secure: true,
             maxAge: 24 * 60 * 60 * 1000
         });
-        res.json({ accessToken, user })
+        res.json({ accessToken, result })
 
     } catch (error) {
         res.status(500).json({ message: `Server Error`, errorMessage: `${error}` })
@@ -60,17 +65,18 @@ const userLogin = async (req, res) => {
 };
 
 const refreshUserToken = async (req, res) => {
+    console.log(`This is user req.cookies`, req.cookies)
     try {
-        //let cookies = req.cookies;
-        let cookies = req.headers.cookie;
-        console.log(cookies, `req.cookies`);
+        let cookies = req.cookies.jwt;
+        //let cookies = req.headers.cookie;
+        
         //if cookies & if cookies has jwt property
         if (!cookies) {
             return res.sendStatus(401);
         }
         //console.log(cookies.jwt, `cookies.jwt`);
         const refreshToken = cookies;
-        const foundUser = await User.findOne({ refreshToken: refreshToken });
+        const foundUser = await User.findOne({ refreshToken: refreshToken }).exec();
         if (!foundUser) {
             return res.sendStatus(403);
         }
@@ -92,13 +98,14 @@ const refreshUserToken = async (req, res) => {
 const userLogout = async (req, res) => {
     try {
         //on client delete access token from memory
-        //let cookies = req.cookies 
-        let cookies = req.headers.cookie;
+        let cookies = req.cookies.jwt;
+        //let cookies = req.headers.cookie;
         if (!cookies) {
             return res.sendStatus(204); //Successful No Content
         }
         const refreshToken = cookies;
-        const foundUser = await User.find({ refreshToken: refreshToken });
+        //const foundUser = await User.find({ refreshToken: refreshToken });
+        const foundUser = await User.find({ refreshToken: refreshToken }).exec();
         if (!foundUser) {
             res.clearCookie('jwt', {
                 httpOnly: true,
@@ -110,7 +117,9 @@ const userLogout = async (req, res) => {
             // return res.sendStatus(204);
         }
 
-        const deleteRFToken = await User.updateOne({ foundUser }, { refreshToken: '' })
+        //const deleteRFToken = await User.updateOne({ foundUser }, { refreshToken: '' })
+        foundUser.refreshToken = '';
+        const result = await foundUser.save();
         res.clearCookie('jwt', {
             httpOnly: true,
             sameSite: 'None',

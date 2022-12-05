@@ -34,22 +34,14 @@ module.exports = {
       // send to next endpoint
       next();
     },
-    // refreshMiddleware: function (req, res, next){
-    //   const cookies = req.cookies;
-    //   console.log(cookies);
-    //   if(!cookies.jwt) {
-    //     return res.status(401);
-    //   }
-    //   const refreshToken = cookies.jwt;
-    // },
     signToken: function ({ email, _id, role }) {
       const payload = { email, _id, role };
   
-      return jwt.sign({ data: payload }, accessSecret, { expiresIn: '2m' });
+      return jwt.sign({ data: payload }, accessSecret, { expiresIn: '5m' });
     },
-    refreshToken: function ({ email, _id }) {
+    signRefreshToken: function ({ email, _id }) {
         const payload = { email, _id };
     
-        return jwt.sign({ data: payload }, refreshSecret, { expiresIn: '5m' });
+        return jwt.sign({ data: payload }, refreshSecret, { expiresIn: '10m' });
     },
 };
