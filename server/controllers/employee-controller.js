@@ -28,7 +28,7 @@ const getOneEmployee = async (req, res) => { //change for emp Sign In
 };
 
 const createNewEmployee = async (req, res) => { // admin + auth 
-    console.log(req.body);
+    //console.log(req.body);
     try {
         const duplicate = await Employee.findOne({ email: req.body.email}).exec();
         if (duplicate) return res.sendStatus(409);
@@ -86,8 +86,7 @@ const refreshEmployeeToken = async (req, res) => {
         }
 
         const refreshToken = cookies;
-        const foundEmployee = await Employee.find({ refreshToken: refreshToken }).lean();
-        //const foundEmployee = await Employee.findOne({ refreshToken: refreshToken }).exec();
+        const foundEmployee = await Employee.findOne({ refreshToken: refreshToken }).exec();
         if (!foundEmployee) {
             return res.status(404).json({message: `Could not find user`})
             //return res.sendStatus(404);
