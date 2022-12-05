@@ -61,12 +61,12 @@ const employeeLogin = async (req, res) => {
 
         //save refresh token to DB
         employee.refreshToken = refreshToken;
-        const result = await employee.save()
+        const result = await employee.save();
 
         res.cookie('jwt', refreshToken, { //Put secure: true in PRODUCTION!
             httpOnly: true,
             sameSite: 'None',
-            // secure: true,
+            secure: true,
             maxAge: 24 * 60 * 60 * 1000
         });
         res.json({ accessToken, result }) 
@@ -77,7 +77,7 @@ const employeeLogin = async (req, res) => {
 };
 
 const refreshEmployeeToken = async (req, res) => {
-    console.log(`This is req.cookies`, req.cookies)
+    console.log(`This is employee req.cookies`, req.cookies)
     try {
         const cookies = req.cookies.jwt;
         //if cookies & if cookies has jwt property
@@ -129,7 +129,7 @@ const employeeLogout = async (req, res) => {
 
         foundEmployee.refreshToken = '';
         const result = await foundEmployee.save();
-        console.log(result);
+        //console.log(result);
         res.clearCookie('jwt', {
             httpOnly: true,
             sameSite: 'None',
