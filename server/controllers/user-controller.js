@@ -54,7 +54,7 @@ const userLogin = async (req, res) => {
         res.cookie('jwt', refreshToken, {
             httpOnly: true,
             sameSite: 'None',
-            secure: true,
+            //secure: true,
             maxAge: 24 * 60 * 60 * 1000
         });
         res.json({ accessToken, result })
@@ -105,7 +105,7 @@ const userLogout = async (req, res) => {
         }
         const refreshToken = cookies;
         //const foundUser = await User.find({ refreshToken: refreshToken });
-        const foundUser = await User.find({ refreshToken: refreshToken }).exec();
+        const foundUser = await User.findOne({ refreshToken: refreshToken }).exec();
         if (!foundUser) {
             res.clearCookie('jwt', {
                 httpOnly: true,
@@ -140,7 +140,7 @@ const getOneUser = async (req, res) => {
     console.log(req.body);
     try {
         const foundUser = await User.findOne({
-            $or: [{ _id: req.body._id }, { policyNo: req.body.policyNo }],
+            $or: [{ _id: req.params._id }, { policyNo: req.body.policyNo }, { _id: req.params.client_id }],
         }).populate('userClaims');
 
         if (!foundUser) {
@@ -153,13 +153,16 @@ const getOneUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
+    console.log(req.params);
     console.log(req.body);
     
     try {
-        const update = req.body.user;
+        //const update = req.body;
+        //const update = req.params;
+
         const updatedUser = await User.findOneAndUpdate(
-            { _id: update._id },
-            { $set: update },
+            { _id: req.params._id },
+            { $set: req.body },
             { runValidators: true, returnOriginal: false }
         );
 

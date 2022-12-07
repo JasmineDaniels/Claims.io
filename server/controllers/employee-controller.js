@@ -66,7 +66,7 @@ const employeeLogin = async (req, res) => {
         res.cookie('jwt', refreshToken, { //Put secure: true in PRODUCTION!
             httpOnly: true,
             sameSite: 'None',
-            secure: true,
+            //secure: true,
             maxAge: 24 * 60 * 60 * 1000
         });
         res.json({ accessToken, result }) 
@@ -179,17 +179,17 @@ const deleteEmployee = async (req, res) => { // admin + auth
 
 const addClient = async (req, res) => { // make multiple $in: - array of clients
     try {
-        const employeeData = req.body.user;
-        const clientData = req.body.clients;
+        const employeeData = req.params._id; 
+        const clientData = req.params.client_id;
         const foundEmployee = await Employee.findByIdAndUpdate(
-            { _id: employeeData._id },
-            { $addToSet: { clients: clientData._id } },
+            { _id: employeeData },
+            { $addToSet: { clients: clientData } },
             { runValidators: true, returnOriginal: false }
         );
         if (!foundEmployee) {
             return res.status(404).json({ message: "This employee doesn't exist." })
         }
-        const updateClient = await User.updateOne({_id: clientData._id}, { assignedAgent: employeeData._id})
+        const updateClient = await User.updateOne({_id: clientData}, { assignedAgent: employeeData})
         res.json(foundEmployee)
     } catch (error) {
         res.status(500).json({ message: `Server Error`, errorMessage: `${error}` })
@@ -197,8 +197,8 @@ const addClient = async (req, res) => { // make multiple $in: - array of clients
 };
 
 const getClients = async (req, res) => {
-    const employeeData = req.body.user;
-    const clientData = req.body.clients;
+    const employeeData = req.params._id;
+    //const clientData = req.body.clients;
     try {
         const clients = await findClients(employeeData)
         if (!clients){
@@ -210,15 +210,38 @@ const getClients = async (req, res) => {
     }
 };
 
-const removeClient = async (req, res) => {
+const updateClient = async (req, res) => {
+    console.log(req.params);
+    console.log(req.body); 
     try {
-        const employeeData = req.body.user;
-        const clientData = req.body.clients;
-        const foundEmployee = await Employee.findByIdAndUpdate(
-            { _id: employeeData._id },
-            { $pull: { clients: clientData._id } },
+        const updatedUser = await User.findOneAndUpdate(
+            { _id: req.params.client_id },
+            { $set: req.body },
             { runValidators: true, returnOriginal: false }
         );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "This user doesn't exist." })
+        }
+        res.json(updatedUser)
+    } catch (error) {
+        res.status(500).json({ message: `Server Error`, errorMessage: `${error}` })
+    };
+};
+
+const removeClient = async (req, res) => {
+    try {
+        const employeeData = req.params._id;
+        const clientData = req.params.client_id;
+        const foundEmployee = await Employee.findByIdAndUpdate(
+            { _id: employeeData },
+            { $pull: { clients: clientData } },
+            { runValidators: true, returnOriginal: false }
+        );
+        
+        //foundUser.update({assignedAgent: ObjectId("5dsfkjh2r74dsjdhf3r4f")}, {$unset: {category: 1 }});
+        const updateClient = await User.updateOne({_id: clientData}, {$unset: {assignedAgent: 1 }})
+
         if (!foundEmployee) {
             return res.status(404).json({ message: "This employee doesn't exist." })
         }
@@ -240,5 +263,6 @@ module.exports = {
     deleteEmployee,
     addClient,
     getClients,
+    updateClient,
     removeClient
 }

@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const { getAllEmployees, getOneEmployee, createNewEmployee, employeeLogin, employeeLogout, updateEmployee, addClient, removeClient, getClients, refreshEmployeeToken } = require('../../controllers/employee-controller');
+const { getAllEmployees, getOneEmployee, createNewEmployee, employeeLogin, employeeLogout, updateEmployee, addClient, removeClient, getClients, updateClient, refreshEmployeeToken } = require('../../controllers/employee-controller');
 const { getAClaim, createAClaim, updateAClaim, deleteAClaim, getAllClaims } = require('../../controllers/claims-controller');
-const { updateUser } = require('../../controllers/user-controller');
+const { getOneUser, updateUser } = require('../../controllers/user-controller');
 const { authMiddleware }= require('../../utils/auth');
 const { Admin } = require('../../utils/rolesList')
 const verifyRoles = require('../../utils/verifyRoles');
@@ -22,11 +22,15 @@ router.route('/agent') //:_id
     .put(updateEmployee); 
     //.delete() //delete an employee, add auth, add verify roles
 
-router.route('/client') //add auth
-    .get(getClients) 
+router.route('/:_id/client') //add auth
+    .get(authMiddleware,getClients) 
+
+//router.route('/client/:_id') //add auth
+router.route('/:_id/client/:client_id') //add auth
+    .get(authMiddleware, getOneUser)
     .post(authMiddleware, addClient) 
-    .put(updateUser)
-    .delete(removeClient)
+    .put(authMiddleware, updateClient)
+    .delete(authMiddleware, removeClient)
 
 router.route('/claims') //claim, add auth
     .get(getAllClaims) //add Admin 
