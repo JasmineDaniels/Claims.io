@@ -3,7 +3,7 @@ const { signToken, signRefreshToken } = require('../utils/auth');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const path = require('path');
-const { findClients } = require('../utils/helpers');
+const { findClients, findClaims } = require('../utils/helpers');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 
 const getAllEmployees = async (req, res) => {
@@ -19,7 +19,7 @@ const getOneEmployee = async (req, res) => { //change for emp Sign In
     console.log(req.body);
     try {
         const employee = await Employee.findOne({
-            $or: [{ email: req.body.email }, { _id: req.body._id }, { email: req.body.email }]
+            $or: [{ email: req.body.email }, { _id: req.params._id }, { email: req.body.email }]
         });
         res.json(employee);
     } catch (error) {
@@ -151,7 +151,7 @@ const updateEmployee = async (req, res) => {
     try {
         const update = req.body;
         const updatedEmployee = await Employee.findOneAndUpdate(
-            { _id: req.body._id },
+            { _id: req.params._id },
             { $set: update },
             { runValidators: true, returnOriginal: false }
         );
@@ -205,6 +205,20 @@ const getClients = async (req, res) => {
             return res.status(404).json({ message: `This employee has no clients`});
         }
         res.json(clients)
+    } catch (error) {
+        res.status(500).json({ message: `Server Error`, errorMessage: `${error}` });
+    }
+};
+
+const getClaims = async (req, res) => {
+    const employeeData = req.params._id;
+    //const clientData = req.body.clients;
+    try {
+        const claims = await findClaims(employeeData)
+        if (!claims){
+            return res.status(404).json({ message: `This employee has no claims`});
+        }
+        res.json(claims)
     } catch (error) {
         res.status(500).json({ message: `Server Error`, errorMessage: `${error}` });
     }
@@ -264,5 +278,6 @@ module.exports = {
     addClient,
     getClients,
     updateClient,
-    removeClient
+    removeClient,
+    getClaims,
 }
