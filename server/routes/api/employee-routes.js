@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const { getAllEmployees, getOneEmployee, createNewEmployee, employeeLogin, employeeLogout, updateEmployee, addClient, removeClient, getClients, refreshEmployeeToken } = require('../../controllers/employee-controller');
+const { getAllEmployees, getOneEmployee, createNewEmployee, employeeLogin, employeeLogout, updateEmployee, addClient, removeClient, getClients, updateClient, refreshEmployeeToken, getClaims } = require('../../controllers/employee-controller');
 const { getAClaim, createAClaim, updateAClaim, deleteAClaim, getAllClaims } = require('../../controllers/claims-controller');
-const { updateUser } = require('../../controllers/user-controller');
+const { getOneUser } = require('../../controllers/user-controller');
 const { authMiddleware }= require('../../utils/auth');
 const { Admin } = require('../../utils/rolesList')
 const verifyRoles = require('../../utils/verifyRoles');
@@ -10,31 +10,40 @@ const verifyRoles = require('../../utils/verifyRoles');
 router.route('/')
     .get(getAllEmployees)
     .post(createNewEmployee) // verify Roles (Admin)?
-    
+
+router.route('/claims') 
+    .get(getAllClaims)  
+    .post(createAClaim);
 
 router.route('/login').post(employeeLogin);
 router.route('/refresh').get(refreshEmployeeToken);
-router.route('/logout').get(employeeLogout);
+router.route('/logout').get(employeeLogout); //if cookies has jwt prop
 
 
-router.route('/agent') //:_id
+router.route('/:_id') 
     .get(getOneEmployee)
-    .put(updateEmployee); 
+    .put(authMiddleware, updateEmployee); 
     //.delete() //delete an employee, add auth, add verify roles
+    
+//get clients by employee id
+router.route('/:_id/client')
+    .get(authMiddleware, getClients) 
 
-router.route('/client') //add auth
-    .get(getClients) 
+//manage employee clients 
+router.route('/:_id/client/:client_id') 
+    .get(authMiddleware, getOneUser)
     .post(authMiddleware, addClient) 
-    .put(updateUser)
-    .delete(removeClient)
+    .put(authMiddleware, updateClient)
+    .delete(authMiddleware, removeClient)
 
-router.route('/claims') //claim, add auth
-    .get(getAllClaims) //add Admin 
-    .post(createAClaim);
-
-router.route('/claim') //add auth, /:_id
-    .get(getAClaim) 
+//manage claims by id (user id, agent id, or claim id)
+router.route('/claims/:_id') 
+    //.get(getAClaim) 
+    .get(authMiddleware, getClaims)
     .put(updateAClaim) 
-    .delete(authMiddleware, verifyRoles(Admin), deleteAClaim); //:_id
+    .delete(authMiddleware, verifyRoles(Admin), deleteAClaim); 
+
+
+
     
 module.exports = router;

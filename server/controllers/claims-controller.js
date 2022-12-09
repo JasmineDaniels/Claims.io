@@ -36,10 +36,10 @@ const createAClaim = async (req, res) => {
 const getAClaim = async (req, res) => {
     console.log(req.body);
     try {
-        const claim = await Claim.findOne({ _id: req.body._id })
+        const claim = await Claim.findOne({ _id: req.params._id })
             .populate('agent_id')
             .populate('client_id');
-        claim ? res.json(claim) : res.status(404).json({ message: `No claim with this id ${req.body._id}`})
+        claim ? res.json(claim) : res.status(404).json({ message: `No claim with this id ${req.params._id}`})
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: `Internal Server Error`})
@@ -51,7 +51,7 @@ const updateAClaim = async (req, res) => {
     const update = req.body;
     try {
         const claim = await Claim.findByIdAndUpdate(
-            {_id: req.body._id},
+            {_id: req.params._id},
             {$set: update},
             {new: true},
         );
@@ -68,15 +68,15 @@ const updateAClaim = async (req, res) => {
 const deleteAClaim = async (req, res) => {
     console.log(req.body);
     try {
-        await Claim.findByIdAndDelete({_id: req.body._id})
+        await Claim.findByIdAndDelete({_id: req.params._id})
         const updateEmployee = await Employee.findByIdAndUpdate(
             {_id: req.body.agent_id},
-            {$pull: { employeeClaims: req.body._id }},
+            {$pull: { employeeClaims: req.params._id }},
             {runValidators: true, returnOriginal: false},
         );
         const updateClient = await User.findByIdAndUpdate(
             {_id: req.body.client_id},
-            {$pull: { userClaims: req.body._id }},
+            {$pull: { userClaims: req.params._id }},
             {runValidators: true, returnOriginal: false},
         )
         if (!updateEmployee || !updateClient){

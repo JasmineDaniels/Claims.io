@@ -1,5 +1,6 @@
 const { User } = require('../models');
 const { signToken, signRefreshToken } = require('../utils/auth');
+const { findClientClaims, findClaimsByID } = require('../utils/helpers');
 const jwt = require('jsonwebtoken');
 const path = require('path')
 require('dotenv').config({path: path.resolve(__dirname, '../.env')})
@@ -54,7 +55,7 @@ const userLogin = async (req, res) => {
         res.cookie('jwt', refreshToken, {
             httpOnly: true,
             sameSite: 'None',
-            secure: true,
+            //secure: true,
             maxAge: 24 * 60 * 60 * 1000
         });
         res.json({ accessToken, result })
@@ -105,7 +106,7 @@ const userLogout = async (req, res) => {
         }
         const refreshToken = cookies;
         //const foundUser = await User.find({ refreshToken: refreshToken });
-        const foundUser = await User.find({ refreshToken: refreshToken }).exec();
+        const foundUser = await User.findOne({ refreshToken: refreshToken }).exec();
         if (!foundUser) {
             res.clearCookie('jwt', {
                 httpOnly: true,
@@ -140,7 +141,7 @@ const getOneUser = async (req, res) => {
     console.log(req.body);
     try {
         const foundUser = await User.findOne({
-            $or: [{ _id: req.body._id }, { policyNo: req.body.policyNo }],
+            $or: [{ _id: req.params._id }, { policyNo: req.body.policyNo }, { _id: req.params.client_id }],
         }).populate('userClaims');
 
         if (!foundUser) {
@@ -153,13 +154,16 @@ const getOneUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
+    console.log(req.params);
     console.log(req.body);
     
     try {
-        const update = req.body.user;
+        //const update = req.body;
+        //const update = req.params;
+
         const updatedUser = await User.findOneAndUpdate(
-            { _id: update._id },
-            { $set: update },
+            { _id: req.params._id },
+            { $set: req.body },
             { runValidators: true, returnOriginal: false }
         );
 
@@ -193,6 +197,20 @@ const updateUser = async (req, res) => {
 //     }
 // };
 
+const getClaims = async (req, res) => {
+    const userData = req.params._id;
+
+    try {
+        const claims = await findClientClaims(userData)
+        if (!claims){
+            return res.status(404).json({ message: `This user has no claims`});
+        }
+        res.json(claims)
+    } catch (error) {
+        res.status(500).json({ message: `Server Error`, errorMessage: `${error}` });
+    }
+};
+
 module.exports = {
     getAllUsers,
     createNewUser,
@@ -200,5 +218,6 @@ module.exports = {
     refreshUserToken,
     userLogout,
     getOneUser,
+    getClaims,
     updateUser,
 }
