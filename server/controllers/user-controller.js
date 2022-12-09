@@ -1,5 +1,6 @@
 const { User } = require('../models');
 const { signToken, signRefreshToken } = require('../utils/auth');
+const { findClientClaims, findClaimsByID } = require('../utils/helpers');
 const jwt = require('jsonwebtoken');
 const path = require('path')
 require('dotenv').config({path: path.resolve(__dirname, '../.env')})
@@ -196,6 +197,20 @@ const updateUser = async (req, res) => {
 //     }
 // };
 
+const getClaims = async (req, res) => {
+    const userData = req.params._id;
+
+    try {
+        const claims = await findClientClaims(userData)
+        if (!claims){
+            return res.status(404).json({ message: `This user has no claims`});
+        }
+        res.json(claims)
+    } catch (error) {
+        res.status(500).json({ message: `Server Error`, errorMessage: `${error}` });
+    }
+};
+
 module.exports = {
     getAllUsers,
     createNewUser,
@@ -203,5 +218,6 @@ module.exports = {
     refreshUserToken,
     userLogout,
     getOneUser,
+    getClaims,
     updateUser,
 }

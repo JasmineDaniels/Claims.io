@@ -24,23 +24,22 @@ router.route('/:_id')
     .get(getOneEmployee)
     .put(authMiddleware, updateEmployee); 
     //.delete() //delete an employee, add auth, add verify roles
-
+    
+//get clients by employee id
 router.route('/:_id/client')
     .get(authMiddleware, getClients) 
 
-//router.route('/client/:_id') 
+//manage employee clients 
 router.route('/:_id/client/:client_id') 
     .get(authMiddleware, getOneUser)
     .post(authMiddleware, addClient) 
     .put(authMiddleware, updateClient)
     .delete(authMiddleware, removeClient)
 
-router.route('/:_id/claims')
-    .get(authMiddleware, getClaims)
-
-
+//manage claims by id (user id, agent id, or claim id)
 router.route('/claims/:_id') 
-    .get(getAClaim) 
+    //.get(getAClaim) 
+    .get(authMiddleware, getClaims)
     .put(updateAClaim) 
     .delete(authMiddleware, verifyRoles(Admin), deleteAClaim); 
 

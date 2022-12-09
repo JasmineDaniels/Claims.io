@@ -3,7 +3,7 @@ const { signToken, signRefreshToken } = require('../utils/auth');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const path = require('path');
-const { findClients, findClaims } = require('../utils/helpers');
+const { findClients, findClaims, findClaimsByID } = require('../utils/helpers');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 
 const getAllEmployees = async (req, res) => {
@@ -214,7 +214,8 @@ const getClaims = async (req, res) => {
     const employeeData = req.params._id;
     //const clientData = req.body.clients;
     try {
-        const claims = await findClaims(employeeData)
+        //const claims = await findClaims(employeeData)
+        const claims = await findClaimsByID(employeeData)
         if (!claims){
             return res.status(404).json({ message: `This employee has no claims`});
         }
