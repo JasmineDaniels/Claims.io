@@ -17,7 +17,6 @@ const getAllEmployees = async (req, res) => {
 };
 
 const getOneEmployee = async (req, res) => { 
-    console.log(req.body);
     try {
         const employee = await Employee.findOne({
             $or: [{ email: req.body.email }, { _id: req.params._id }, { email: req.body.email }]
@@ -81,7 +80,6 @@ const employeeLogin = async (req, res) => {
 };
 
 const refreshEmployeeToken = async (req, res) => {
-    console.log(`This is employee req.cookies`, req.cookies)
     try {
         //const cookies = req.cookies.jwt;
         const cookies = req.cookies;
@@ -106,12 +104,12 @@ const refreshEmployeeToken = async (req, res) => {
         res.json({ accessToken, foundEmployee })
     } catch (error) {
         console.log(error)
-        res.status(500).json({ message: `Internal Server Error` })
+        res.status(500).json({ message: `Internal Server Error`, errorMessage: `${error}` })
     }
 };
 
 const employeeLogout = async (req, res) => {
-    console.log(`this is req.cookies`, req.cookies)
+    // console.log(`this is req.cookies`, req.cookies)
     try {
         //On client delete access token from memory 
         let cookies = req.cookies;
@@ -152,11 +150,10 @@ const employeeLogout = async (req, res) => {
 };
 
 const updateEmployee = async (req, res) => {
-    console.log(req.body);
-
     if(!req?.params?._id){
         return res.status(400).json({ message: `ID paramater is required` })
     }
+
     try {
         const update = req.body;
         const updatedEmployee = await Employee.findOneAndUpdate(
@@ -191,6 +188,10 @@ const deleteEmployee = async (req, res) => { // admin + auth
 };
 
 const addClient = async (req, res) => { // make multiple $in: - array of clients
+    if(!req?.params?._id || !req?.params?.client_id){
+        return res.status(400).json({ message: `Employee & Client ID paramater is required` })
+    }
+    
     try {
         const employeeData = req.params._id; 
         const clientData = req.params.client_id;
@@ -210,6 +211,10 @@ const addClient = async (req, res) => { // make multiple $in: - array of clients
 };
 
 const getClients = async (req, res) => {
+    if(!req?.params?._id){
+        return res.status(400).json({ message: `ID paramater is required` })
+    }
+
     const employeeData = req.params._id;
     //const clientData = req.body.clients;
     try {
@@ -224,10 +229,12 @@ const getClients = async (req, res) => {
 };
 
 const getClaims = async (req, res) => {
+    if(!req?.params?._id){
+        return res.status(400).json({ message: `ID paramater is required` })
+    }
     const employeeData = req.params._id;
     //const clientData = req.body.clients;
     try {
-        //const claims = await findClaims(employeeData)
         const claims = await findClaimsByID(employeeData)
         if (!claims){
             return res.status(404).json({ message: `This employee has no claims`});
@@ -239,8 +246,11 @@ const getClaims = async (req, res) => {
 };
 
 const updateClient = async (req, res) => {
-    console.log(req.params);
-    console.log(req.body); 
+    if(!req?.params?._id || !req?.params?.client_id){
+        return res.status(400).json({ message: `Employee & Client ID paramater is required` })
+    }
+    if(!req?.body) return res.status(400).json({ message: `No data to update` })
+    
     try {
         const updatedUser = await User.findOneAndUpdate(
             { _id: req.params.client_id },
@@ -258,6 +268,9 @@ const updateClient = async (req, res) => {
 };
 
 const removeClient = async (req, res) => {
+    if(!req?.params?._id || !req?.params?.client_id){
+        return res.status(400).json({ message: `Employee & Client ID paramater is required` })
+    }
     try {
         const employeeData = req.params._id;
         const clientData = req.params.client_id;
