@@ -9,14 +9,14 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const getAllEmployees = async (req, res) => {
     try {
         const allEmployees = await Employee.find({});
-        res.json(allEmployees)
+        if(!allEmployees) return res.status(204).json({ message: `No employees data.`});
+        res.json(allEmployees);
     } catch (error) {
         res.status(500).json(error)
     }
 };
 
-const getOneEmployee = async (req, res) => { //change for emp Sign In
-    console.log(req.body);
+const getOneEmployee = async (req, res) => { 
     try {
         const employee = await Employee.findOne({
             $or: [{ email: req.body.email }, { _id: req.params._id }, { email: req.body.email }]
@@ -28,10 +28,13 @@ const getOneEmployee = async (req, res) => { //change for emp Sign In
 };
 
 const createNewEmployee = async (req, res) => { // admin + auth 
-    //console.log(req.body);
     try {
         const duplicate = await Employee.findOne({ email: req.body.email}).exec();
         if (duplicate) return res.sendStatus(409);
+
+        if(!req?.body?.firstName || !req?.body?.lastName || !req?.body?.email || !req?.body?.password){
+            return res.status(400).json({ message: `Password, Email, & First & Last names are required`})
+        }
         const employee = await Employee.create(req.body);
         if (!employee) {
             return res.status(400).json({ message: 'Please enter a valid Email' });
@@ -66,7 +69,7 @@ const employeeLogin = async (req, res) => {
         res.cookie('jwt', refreshToken, { //Put secure: true in PRODUCTION!
             httpOnly: true,
             sameSite: 'None',
-            //secure: true,
+            secure: true,
             maxAge: 24 * 60 * 60 * 1000
         });
         res.json({ accessToken, result }) 
@@ -77,15 +80,15 @@ const employeeLogin = async (req, res) => {
 };
 
 const refreshEmployeeToken = async (req, res) => {
-    console.log(`This is employee req.cookies`, req.cookies)
     try {
-        const cookies = req.cookies.jwt;
+        //const cookies = req.cookies.jwt;
+        const cookies = req.cookies;
         //if cookies & if cookies has jwt property
-        if (!cookies) {
+        if (!cookies?.jwt) {
             return res.sendStatus(401);
         }
 
-        const refreshToken = cookies;
+        const refreshToken = cookies.jwt;
         const foundEmployee = await Employee.findOne({ refreshToken: refreshToken }).exec();
         if (!foundEmployee) {
             return res.status(404).json({message: `Could not find user`})
@@ -101,19 +104,19 @@ const refreshEmployeeToken = async (req, res) => {
         res.json({ accessToken, foundEmployee })
     } catch (error) {
         console.log(error)
-        res.status(500).json({ message: `Internal Server Error` })
+        res.status(500).json({ message: `Internal Server Error`, errorMessage: `${error}` })
     }
 };
 
 const employeeLogout = async (req, res) => {
-    console.log(`this is req.cookies`, req.cookies)
+    // console.log(`this is req.cookies`, req.cookies)
     try {
         //On client delete access token from memory 
-        let cookies = req.cookies.jwt;
-        if (!cookies) {
-            return res.status(204); //Successful No Content
+        let cookies = req.cookies;
+        if (!cookies?.jwt) {
+            return res.status(204); //Successful No Content => Send to Login on Client
         }
-        const refreshToken = cookies;
+        const refreshToken = cookies.jwt;
         //const foundEmployee = await Employee.find({ refreshToken: refreshToken });
         const foundEmployee = await Employee.findOne({ refreshToken: refreshToken }).exec();
         if (!foundEmployee) {
@@ -147,7 +150,10 @@ const employeeLogout = async (req, res) => {
 };
 
 const updateEmployee = async (req, res) => {
-    console.log(req.body);
+    if(!req?.params?._id){
+        return res.status(400).json({ message: `ID paramater is required` })
+    }
+
     try {
         const update = req.body;
         const updatedEmployee = await Employee.findOneAndUpdate(
@@ -156,7 +162,7 @@ const updateEmployee = async (req, res) => {
             { runValidators: true, returnOriginal: false }
         );
         if (!updatedEmployee) {
-            return res.status(404).json({ message: "This employee doesn't exist." })
+            return res.status(204).json({ message: `Employee ID ${req.params._id} doesn't exist.` })
         }
         res.json(updatedEmployee)
     } catch (error) {
@@ -165,6 +171,10 @@ const updateEmployee = async (req, res) => {
 };
 
 const deleteEmployee = async (req, res) => { // admin + auth
+    if(!req?.params?._id){
+        return res.status(400).json({ message: `ID paramater is required` })
+    }
+
     try {
         // assign claims and clients assoc. with this emp a new agent
         const employee = await Employee.deleteOne({ $or: [{ _id: req.body._id }, { email: req.body.email }] });
@@ -178,6 +188,10 @@ const deleteEmployee = async (req, res) => { // admin + auth
 };
 
 const addClient = async (req, res) => { // make multiple $in: - array of clients
+    if(!req?.params?._id || !req?.params?.client_id){
+        return res.status(400).json({ message: `Employee & Client ID paramater is required` })
+    }
+    
     try {
         const employeeData = req.params._id; 
         const clientData = req.params.client_id;
@@ -197,6 +211,10 @@ const addClient = async (req, res) => { // make multiple $in: - array of clients
 };
 
 const getClients = async (req, res) => {
+    if(!req?.params?._id){
+        return res.status(400).json({ message: `ID paramater is required` })
+    }
+
     const employeeData = req.params._id;
     //const clientData = req.body.clients;
     try {
@@ -211,10 +229,12 @@ const getClients = async (req, res) => {
 };
 
 const getClaims = async (req, res) => {
+    if(!req?.params?._id){
+        return res.status(400).json({ message: `ID paramater is required` })
+    }
     const employeeData = req.params._id;
     //const clientData = req.body.clients;
     try {
-        //const claims = await findClaims(employeeData)
         const claims = await findClaimsByID(employeeData)
         if (!claims){
             return res.status(404).json({ message: `This employee has no claims`});
@@ -226,8 +246,11 @@ const getClaims = async (req, res) => {
 };
 
 const updateClient = async (req, res) => {
-    console.log(req.params);
-    console.log(req.body); 
+    if(!req?.params?._id || !req?.params?.client_id){
+        return res.status(400).json({ message: `Employee & Client ID paramater is required` })
+    }
+    if(!req?.body) return res.status(400).json({ message: `No data to update` })
+    
     try {
         const updatedUser = await User.findOneAndUpdate(
             { _id: req.params.client_id },
@@ -245,6 +268,9 @@ const updateClient = async (req, res) => {
 };
 
 const removeClient = async (req, res) => {
+    if(!req?.params?._id || !req?.params?.client_id){
+        return res.status(400).json({ message: `Employee & Client ID paramater is required` })
+    }
     try {
         const employeeData = req.params._id;
         const clientData = req.params.client_id;

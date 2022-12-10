@@ -25,6 +25,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // if we're in production, serve client/build as static assets
+//NODE_ENV=production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
 }
