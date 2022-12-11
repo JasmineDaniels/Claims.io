@@ -6,7 +6,7 @@ Claims.io is a RESTful API designed for the insurance space (front-end currently
 
 An Express Node.js server runtime, JWT Access & Refresh token for authorized access and encrypted data sent over the API, brcrypt password hashing and decoding, with server side validation on a MongoDB database with Mongoose ODM.
 
-Deployed Claims API: https://claimsio-production.up.railway.app
+### Deployed Claims API: https://claimsio-production.up.railway.app
 
 ## Table of Contents
 

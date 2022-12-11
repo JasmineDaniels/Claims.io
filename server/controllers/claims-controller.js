@@ -10,7 +10,7 @@ const getAllClaims = async (req, res) => {
 };
 
 const createAClaim = async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     try {
         const claim = await Claim.create(req.body);
         const updateEmployee = await Employee.findByIdAndUpdate(
@@ -34,7 +34,6 @@ const createAClaim = async (req, res) => {
 };
 
 const getAClaim = async (req, res) => {
-    console.log(req.body);
     try {
         const claim = await Claim.findOne({ _id: req.params._id })
             .populate('agent_id')
@@ -47,7 +46,6 @@ const getAClaim = async (req, res) => {
 };
 
 const updateAClaim = async (req, res) => {
-    console.log(req.body);
     const update = req.body;
     try {
         const claim = await Claim.findByIdAndUpdate(
@@ -66,7 +64,6 @@ const updateAClaim = async (req, res) => {
 };
 
 const deleteAClaim = async (req, res) => {
-    console.log(req.body);
     try {
         await Claim.findByIdAndDelete({_id: req.params._id})
         const updateEmployee = await Employee.findByIdAndUpdate(
