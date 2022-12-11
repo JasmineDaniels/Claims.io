@@ -16,7 +16,6 @@ const getAllUsers = async (req, res) => {
 };
 
 const createNewUser = async (req, res) => {
-    console.log(req.body);
     try {
         
         const user = await User.create(req.body);
@@ -30,7 +29,6 @@ const createNewUser = async (req, res) => {
 };
 
 const userLogin = async (req, res) => {
-    console.log(req.body)
     try {
         const user = await User.findOne({
             $or: [{ policyNo: req.body.policyNo }, { _id: req.body._id }, { email: req.body.email }]
@@ -66,7 +64,6 @@ const userLogin = async (req, res) => {
 };
 
 const refreshUserToken = async (req, res) => {
-    console.log(`This is user req.cookies`, req.cookies)
     try {
         let cookies = req.cookies.jwt;
         //let cookies = req.headers.cookie;
@@ -90,8 +87,7 @@ const refreshUserToken = async (req, res) => {
         const accessToken = signToken(foundUser);
         res.json({ accessToken, foundUser })
     } catch (error) {
-        console.log(error)
-        res.status(500).json({ message: `Internal Server Error` })
+        res.status(500).json({ message: `Internal Server Error`, errorMessage: `${error}` })
     }
 
 };
@@ -132,13 +128,13 @@ const userLogout = async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        res.status(500).json({ message: `Internal Server Error` })
+        res.status(500).json({ message: `Internal Server Error`, errorMessage: `${error}` })
     }
 
 };
 
 const getOneUser = async (req, res) => {
-    console.log(req.body);
+
     try {
         const foundUser = await User.findOne({
             $or: [{ _id: req.params._id }, { policyNo: req.body.policyNo }, { _id: req.params.client_id }],
@@ -154,8 +150,8 @@ const getOneUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-    console.log(req.params);
-    console.log(req.body);
+    // console.log(req.params);
+    // console.log(req.body);
     
     try {
         //const update = req.body;
