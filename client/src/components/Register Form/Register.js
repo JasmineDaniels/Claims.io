@@ -30,8 +30,8 @@ const Register = () => {
     const [pwdFocus, setPwdFocus] = useState(false);
 
     const [matchPwd, setMatchPwd] = useState('');
-    const [validMatch, setValidPwdMatch] = useState(false);
-    const [matchFocus, setMatchFocus] = useState(false);
+    const [validPwdMatch, setValidPwdMatch] = useState(false);
+    const [matchPwdFocus, setMatchPwdFocus] = useState(false);
 
     const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState(false);
@@ -61,6 +61,24 @@ const Register = () => {
     useEffect(() => {
         setErrMsg('');
     }, [email, pwd, matchEmail, matchPwd])
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        //if submit button is hacked with JS
+        const v1 = EMAIL_RGX.test(email);
+        const v2 = PW_RGX.test(pwd);
+        if (!v1 || !v2){
+            setErrMsg('Invalid Entry');
+            return;
+        }
+
+        if (!firstName || !lastName){
+            setErrMsg('First Name, Last Name, Email, & Password are required')
+        }
+
+        console.log(`Successfully Submitted`)
+
+    }
     
     return (
         <section>
@@ -68,7 +86,8 @@ const Register = () => {
             ref={errRef}
             className={errMsg ? 'errmsg' : 'offscreen'}
             aria-live="assertive">{errMsg}</p>
-            <form>
+            <h1>Register</h1>
+            <form onSubmit={handleSubmit}>
                 <label htmlFor='firstName'>
                     First Name:
                 </label>
@@ -79,9 +98,25 @@ const Register = () => {
                 autoComplete='off'
                 onChange={(e) => setFirstName(e.target.value)}
                 required
+                aria-invalid={firstName ? 'false' : 'true'}
                 aria-describedby='uidnote'
                 onFocus={() => setFirstNameFocus(true)}
-                onBlur={() => setFirstNameFocus(false)}/>
+                onBlur={() => setFirstNameFocus(false)}
+                />
+
+                <label htmlFor='lastName'>
+                    Last Name:
+                </label>
+                <input
+                type='text'
+                id='lastName'
+                //ref={userRef}
+                autoComplete='off'
+                onChange={(e) => setLastName(e.target.value)}
+                required
+                aria-describedby='uidnote'
+                onFocus={() => setLastNameFocus(true)}
+                onBlur={() => setLastNameFocus(false)}/>
 
                 <label htmlFor='password'>
                     Password: 
@@ -112,7 +147,86 @@ const Register = () => {
                     <span aria-label='percent symbol'>%</span>
                     <span aria-label='hash symbol'>#</span>
                 </p>
+
+                <label htmlFor='confirm_pwd'>
+                    Confirm Password: 
+                    <span className={validPwdMatch && matchPwd ? 'valid' : 'hide'}>
+                        <FontAwesomeIcon icon={faCheck}/>
+                    </span>
+                    <span className={validPwdMatch || !matchPwd ? 'hide' : 'invalid'}>
+                        <FontAwesomeIcon icon={faTimes}/>
+                    </span>
+                </label>
+                <input
+                type='password'
+                id='confirm_pwd'
+                onChange={(e) => setMatchPwd(e.target.value)}
+                required
+                aria-describedby='confirmPwdNote'
+                aria-invalid={validPwdMatch ? 'false' : 'true'}
+                onFocus={() => setMatchPwdFocus(true)}
+                onBlur={() => setMatchPwdFocus(false)}/>
+                <p id='confirmPwNote' className={matchPwdFocus && !validPwdMatch ? '' : 'offscreen'}>
+                    <FontAwesomeIcon icon={faInfoCircle}/>
+                    Must match the password field.
+                </p>
+
+                <label htmlFor='email'>
+                    Email: 
+                    <span className={validEmail ? 'valid' : 'hide'}>
+                        <FontAwesomeIcon icon={faCheck}/>
+                    </span>
+                    <span className={validEmail || !email ? 'hide' : 'invalid'}>
+                        <FontAwesomeIcon icon={faTimes}/>
+                    </span>
+                </label>
+                <input
+                type='email'
+                id='email'
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                autoComplete='off'
+                aria-describedby='emailnote'
+                aria-invalid={validEmail ? 'false' : 'true'}
+                onFocus={() => setEmailFocus(true)}
+                onBlur={() => setEmailFocus(false)}/>
+                <p id='emailnote' className={emailFocus && !validEmail ? '' : 'offscreen'}>
+                    <FontAwesomeIcon icon={faInfoCircle}/>
+                    Please enter a valid email.
+                </p>
+
+                <label htmlFor='confirm_email'>
+                    Confirm Email: 
+                    <span className={validEmailMatch && matchEmail ? 'valid' : 'hide'}>
+                        <FontAwesomeIcon icon={faCheck}/>
+                    </span>
+                    <span className={validEmailMatch || !matchEmail ? 'hide' : 'invalid'}>
+                        <FontAwesomeIcon icon={faTimes}/>
+                    </span>
+                </label>
+                <input
+                type='email'
+                id='confirm_email'
+                onChange={(e) => setMatchEmail(e.target.value)}
+                required
+                autoComplete='off'
+                aria-describedby='confirmEmailNote'
+                aria-invalid={validEmailMatch ? 'false' : 'true'}
+                onFocus={() => setMatchEmailFocus(true)}
+                onBlur={() => setMatchEmailFocus(false)}/>
+                <p id='confirmEmailNote' className={matchEmailFocus && !validEmailMatch ? '' : 'offscreen'}>
+                    <FontAwesomeIcon icon={faInfoCircle}/>
+                    Must match the email field.
+                </p>
+
+                <button 
+                type='submit' 
+                disabled={ !firstName || !lastName || !validEmail || !validPwd || !validPwdMatch || !validEmailMatch ? true : false}>
+                    Sign Up
+                </button>
             </form>
+
+
         </section>
     )
 }
