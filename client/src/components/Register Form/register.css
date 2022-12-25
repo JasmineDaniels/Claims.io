@@ -12,3 +12,19 @@
 .hide{
     display: none;
 }
+
+.visual{
+    background-color: #fcd979;
+}
+
+.errfont{
+    color: rgb(219, 12, 12);
+}
+
+.valid{
+    color: rgb(123, 191, 21);
+}
+
+.invalid{
+    color: rgb(196, 6, 6);
+}
