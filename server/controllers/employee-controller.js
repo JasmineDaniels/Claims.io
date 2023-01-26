@@ -49,7 +49,9 @@ const createNewEmployee = async (req, res) => { // admin + auth
 const employeeLogin = async (req, res) => {
     try {
         const employee = await Employee.findOne({
-            $or: [{ _id: req.body._id }, { email: req.body.email }]
+            where: {
+                $or: [{ email: req.body.email }, { _id: req.body._id }]
+            },
         }).exec();
         if (!employee) {
             return res.status(400).json({ message: "Can't find this employee" });

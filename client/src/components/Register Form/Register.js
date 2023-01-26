@@ -8,8 +8,8 @@ import './register.css';
 const EMAIL_RGX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PW_RGX = /^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[!@?#$%])[a-zA-Z0-9!?]{8,24}/;
 const EMP_REGISTER_URL = '/employees/'
-//const EMP_REGISTER_URL = '/employees/register'
-const REGISTER_URL = '/register'
+const USER_REGISTER_URL = '/users/'
+
 
 const Register = () => {
     const userRef = useRef();
@@ -110,6 +110,12 @@ const Register = () => {
             console.log(JSON.stringify(response));
             setSuccess(true)
             // clear input fields
+            setFirstName('')
+            setLastName('')
+            setEmail('')
+            setMatchEmail('')
+            setPwd('')
+            setMatchPwd('')
         } catch (error) {
             console.log(error)
             if (!error?.response) {

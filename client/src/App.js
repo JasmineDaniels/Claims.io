@@ -1,11 +1,14 @@
 import Register from "./components/Register Form/Register";
+import SignIn from "./components/Sign-In-Form/SignIn";
 import TempHeader  from "./components/temp-header";
 function App() {
   return (
     <>
       <div className="App">
         <TempHeader/>
-        <Register/>
+        {/* Navigation */}
+        {/* <Register/> */}
+        <SignIn/>
       </div>
     </>
     
