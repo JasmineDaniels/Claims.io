@@ -28,3 +28,10 @@
 .site-title{
     font-size: 2rem;
 }
+
+.spaced-out{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}

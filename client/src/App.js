@@ -20,7 +20,7 @@ function App() {
     <Header/>
     <MainNavigation/>
     <Routes>
-      {/* <Route path="/" element={<Layout />}> */}
+      <Route path="/" element={<TempHeader/>}/>
       <Route path="employeeLogin" element={<EmpSignIn />} />
       <Route path="employeeSignUp" element={<EmpRegister />} />
       
@@ -29,7 +29,7 @@ function App() {
       <Route path="userLogin" element={<UserLogin />} />
       <Route path="userSignUp" element={<UserSignUp />} />
     </Routes>
-    <TempHeader/>
+    
     {/* Footer */}
     </>
   );
