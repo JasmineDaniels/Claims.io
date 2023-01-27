@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect, useContext } from "react";
-import AuthContext from "../../context/AuthProvider";
+import AuthContext from "../../../context/AuthProvider";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Row, Col, Form, InputGroup, Card } from 'react-bootstrap';
-import axios from '../../api/axois';
+import axios from '../../../api/axois';
 
 const EMP_LOGIN_URL = '/employees/login';
 
-const SignIn = () => {
+const EmpSignIn = () => {
     const { setAuth } = useContext(AuthContext);
     const userRef = useRef();
     const errRef = useRef();
@@ -68,12 +68,9 @@ const SignIn = () => {
                 }
             );
 
-            console.log(response);
             const accessToken = response?.data?.accessToken;
             const roles = response?.data?.result?.role;
             const roleValues = Object.values(roles);
-            console.log(accessToken);
-            console.log(roleValues);
             setAuth({ email, _id, password, policyNo, roleValues, accessToken });
             //clear input fields
             setEmail('')
@@ -86,11 +83,11 @@ const SignIn = () => {
             if (!error?.response) {
                 setErrMsg('No Server Response');
             } else if (error.response?.status === 400) {
-                setErrMsg(`Incorrect Login Credentials`)
+                setErrMsg(`Incorrect Login Credentials`);
             } else if (error.response?.status === 401) {
-                setErrMsg(`Unauthorized`)
+                setErrMsg(`Unauthorized`);
             } else {
-                setErrMsg('Login Failed')
+                setErrMsg('Login Failed');
             }
             errRef.current.focus();
         }
@@ -223,4 +220,4 @@ const SignIn = () => {
     )
 }
 
-export default SignIn;
+export default EmpSignIn;

@@ -2,8 +2,8 @@ import { useRef, useState, useEffect } from 'react';
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Row, Col, Form, InputGroup, Card } from 'react-bootstrap';
-import axios from '../../api/axois';
-import './register.css';
+import axios from '../../../api/axois';
+import './emp-register.css';
 
 const EMAIL_RGX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PW_RGX = /^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[!@?#$%])[a-zA-Z0-9!?]{8,24}/;
@@ -11,7 +11,7 @@ const EMP_REGISTER_URL = '/employees/'
 const USER_REGISTER_URL = '/users/'
 
 
-const Register = () => {
+const EmpRegister = () => {
     const userRef = useRef();
     const errRef = useRef();
 
@@ -336,4 +336,4 @@ const Register = () => {
     )
 }
 
-export default Register;
+export default EmpRegister;

@@ -1,0 +1,30 @@
+.nav {
+    background-color: #ffbd00;
+    color: #730000;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 2rem;
+    padding: 0 1rem;
+}
+
+.nav ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+}
+
+.nav li.active {
+    background-color: #730000;
+    color: white;
+}
+
+.nav li:hover {
+    background-color: #fadd8f;
+}
+
+.site-title{
+    font-size: 2rem;
+}
