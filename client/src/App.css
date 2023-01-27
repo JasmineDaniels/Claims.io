@@ -1,3 +1,11 @@
+:root {
+  --LHCrimson: #730000;
+  --LHRed: #9b000a;
+  --LHGold: #ffbd00;
+  --LHYellow: #fadd8f;
+
+}
+
 .App {
   text-align: center;
 }

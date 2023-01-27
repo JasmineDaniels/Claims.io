@@ -1,7 +1,7 @@
+
+
 .nav {
-    background-color: #ffbd00;
-    color: #730000;
-    display: flex;
+    /* background-color: var(--LHYellow); */
     justify-content: space-between;
     align-items: stretch;
     gap: 2rem;
@@ -16,17 +16,15 @@
     gap: 1rem;
 }
 
-.nav li.active {
-    background-color: #730000;
-    color: white;
-}
-
-.nav li:hover {
-    background-color: #fadd8f;
-}
-
 .site-title{
-    font-size: 2rem;
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: var(--LHCrimson);
+    font-weight: bolder;
+}
+
+.site-title:hover{
+    color: var(--LHGold); 
 }
 
 .spaced-out{
@@ -34,4 +32,23 @@
     justify-content: center;
     align-items: center;
     
+}
+
+.main-navlinks{
+    background-color: var(--LHGold);
+    width: fit-content;
+}
+
+.nav-link{
+    color: var(--LHCrimson) !important;
+    font-size: 1.5rem !important;
+}
+
+.nav-link:hover{
+    color: white !important;
+}
+
+.brand-align{
+    display: flex;
+    justify-content: space-around;
 }

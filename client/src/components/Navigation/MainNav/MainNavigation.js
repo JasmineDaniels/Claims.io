@@ -8,11 +8,20 @@ export default function MainNavigation() {
         <>
             <Row>
                 <nav className="nav navbar navbar-expand-lg">
-                    <div>
-                        <a className="navbar-brand" href="#">
-                            <img src={lighthouse120px} alt=""></img>
-                        </a>
-                        <Link to={'/'} className='navbar-brand site-title'>Claims.io</Link>
+                    <div className='col'>
+                        <div className='row'>
+                            <div className='brand-align'>
+                                <div className='col-sm-2'>
+                                    <Link className="navbar-brand" to={'/'}>
+                                        <img src={lighthouse120px} alt=""></img>
+                                    </Link>
+                                </div>
+                                <div className='text-start my-auto'>
+                                    <Link to={'/'} className='site-title'>Claims.io </Link> <br />
+                                    <span> by LightHouse</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
@@ -20,12 +29,14 @@ export default function MainNavigation() {
 
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <div className='col-md-8'>
-                            <ul className='justify-content-center'>
-                                <Link to={'/about'} className="nav-link">About</Link>
-                                <Link to={'/pricing'} className="nav-link">Pricing</Link>
-                                <Link to={'/userLogin'} className="nav-link">Login</Link>
-                                <Link to={'/userSignUp'} className="nav-link">Sign Up</Link>
-                            </ul>
+                            <div className='main-navlinks rounded-pill mx-auto'>
+                                <ul className='justify-content-center'>
+                                    <Link to={'/about'} className="nav-link mx-2">About</Link>
+                                    <Link to={'/pricing'} className="nav-link ">Pricing</Link>
+                                    <Link to={'/userLogin'} className="nav-link ">Login</Link>
+                                    <Link to={'/userSignUp'} className="nav-link mx-2">Sign Up</Link>
+                                </ul>
+                            </div>
                         </div>
 
                         <div className='col'>
