@@ -7,7 +7,8 @@ export default function MainNavigation() {
     return (
         <>
             <Row>
-                <nav className="nav navbar navbar-expand-md">
+                {/* <nav className="nav navbar navbar-expand-lg"> */}
+                <Navbar className='nav' expand='lg'>
                     <div className='col'>
                         <div className='brand-align'>
                             <div >
@@ -23,14 +24,18 @@ export default function MainNavigation() {
                                 </Link>
                             </div>
 
+                            <div className='my-auto mx-3'>
+                                <Navbar.Toggle aria-controls='navbar' />
+                            </div>
+
                         </div>
 
                     </div>
-                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    {/* <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
-                    </button>
+                    </button> */}
 
-                    <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                    <Navbar.Collapse className="collapse navbar-collapse" id="navbar">
                         <div className='col pb-5'>
                             <div className='main-navlinks rounded-pill mx-auto fix-center '>
                                 <ul className='justify-content-center'>
@@ -54,10 +59,10 @@ export default function MainNavigation() {
                                 </form>
                             </div>
                         </div>
-                    </div>
+                    </Navbar.Collapse>
 
 
-                </nav>
+                </Navbar>
             </Row>
 
             {/* <nav className="navbar navbar-expand-lg bg-dark">
