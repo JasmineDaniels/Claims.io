@@ -12,6 +12,7 @@
     padding: 0;
     margin: 0;
     list-style: none;
+    justify-content: center;
     display: flex;
     gap: 1rem;
 }
@@ -42,6 +43,19 @@
 .main-navlinks{
     background-color: var(--LHGold);
     width: fit-content;
+    
+}
+
+@media (max-width: 768px){
+    .nav ul {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px){
+    .main-navlinks{
+        background-color: transparent !important;
+    }
 }
 
 .nav-link{
