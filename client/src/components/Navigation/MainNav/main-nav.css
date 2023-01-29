@@ -43,18 +43,19 @@
 .main-navlinks{
     background-color: var(--LHGold);
     width: fit-content;
-    
+    border-radius: 4rem;
 }
+
 
 @media (max-width: 768px){
     .nav ul {
         flex-direction: column;
     }
-}
 
-@media (max-width: 768px){
     .main-navlinks{
-        background-color: transparent !important;
+        /* background-color: transparent !important; */
+        border-radius: 0;
+
     }
 }
 

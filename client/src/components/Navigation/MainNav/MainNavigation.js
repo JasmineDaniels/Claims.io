@@ -37,7 +37,7 @@ export default function MainNavigation() {
 
                     <Navbar.Collapse className="collapse navbar-collapse" id="navbar">
                         <div className='col pb-5'>
-                            <div className='main-navlinks rounded-pill mx-auto fix-center '>
+                            <div className='main-navlinks mx-auto fix-center '>
                                 <ul >
                                     <Link to={'/about'} className="nav-link mx-2">About</Link>
                                     <Link to={'/pricing'} className="nav-link ">Pricing</Link>
