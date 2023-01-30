@@ -15,7 +15,7 @@ import EmpSignIn from "./components/Sign-In Forms/Employee Sign In Form/Employee
 
 function App() {
   return (
-    <>
+    <div className="content">
     <EmpNavigation/>
     <Header/>
     <MainNavigation/>
@@ -23,6 +23,8 @@ function App() {
       <Route path="/" element={<TempHeader/>}/>
       <Route path="employeeLogin" element={<EmpSignIn />} />
       <Route path="employeeSignUp" element={<EmpRegister />} />
+
+      
       
       <Route path="about" element={<About />} />
       <Route path="pricing" element={<Pricing />} />
@@ -31,7 +33,7 @@ function App() {
     </Routes>
     
     {/* Footer */}
-    </>
+    </div>
   );
 }
 

@@ -3,7 +3,6 @@
 .nav {
     /* background-color: var(--LHYellow); */
     justify-content: space-between;
-    align-items: stretch;
     gap: 2rem;
     padding: 0 1rem;
 }
@@ -47,16 +46,18 @@
 }
 
 
-@media (max-width: 768px){
+@media (max-width: 992px){
     .nav ul {
         flex-direction: column;
     }
-
     .main-navlinks{
         /* background-color: transparent !important; */
-        border-radius: 0;
-
+        border-radius: 0; 
     }
+    .search-field{
+        display: none;
+    }
+    
 }
 
 .nav-link{
@@ -70,7 +71,7 @@
 
 .brand-align{
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
 }
 
 .light-margins{

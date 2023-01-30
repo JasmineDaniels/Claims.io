@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Row, Navbar, Nav, Col } from 'react-bootstrap';
+import { Row, Navbar } from 'react-bootstrap';
 import lighthouse120px from '../../../images/lighthouse-120px.png';
 import './main-nav.css';
 export default function MainNavigation() {
@@ -47,7 +47,7 @@ export default function MainNavigation() {
                             </div>
                         </div>
 
-                        <div className='col-md-'>
+                        <div className='search-field col-md-'>
                             <div className='row'>
                                 <form className="form-inline my-2 my-lg-0 spaced-out ">
                                     <div className='col-md-7 '>
