@@ -7,8 +7,8 @@ const EmpNavigation = () => {
             <nav className="emp-nav float-end">
                 <h6 className='text-center'> Employee Portal</h6>
                 <ul>
-                    <Link to={'/employeeLogin'}>Login</Link>
-                    <Link to={'/employeeSignUp'}>Sign Up</Link>
+                    <Link to={'/employee-login'}>Login</Link>
+                    <Link to={'/employee-signUp'}>Sign Up</Link>
                 </ul>
             </nav>
             </div>

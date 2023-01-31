@@ -41,8 +41,8 @@ export default function MainNavigation() {
                                 <ul >
                                     <Link to={'/about'} className="nav-link mx-2">About</Link>
                                     <Link to={'/pricing'} className="nav-link ">Pricing</Link>
-                                    <Link to={'/userLogin'} className="nav-link ">Login</Link>
-                                    <Link to={'/userSignUp'} className="nav-link mx-2">Sign Up</Link>
+                                    <Link to={'/user-login'} className="nav-link ">Login</Link>
+                                    <Link to={'/user-signUp'} className="nav-link mx-2">Sign Up</Link>
                                 </ul>
                             </div>
                         </div>

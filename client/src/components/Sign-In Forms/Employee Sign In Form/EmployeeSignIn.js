@@ -1,5 +1,8 @@
-import { useState, useRef, useEffect, useContext } from "react";
-import AuthContext from "../../../context/AuthProvider";
+//import { useState, useRef, useEffect, useContext } from "react";
+import { useState, useRef, useEffect } from "react";
+import { Link, useNavigate, useLocation, Navigate } from 'react-router-dom'
+// import AuthContext from "../../../context/AuthProvider";
+import useAuth from "../../../hooks/useAuth";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Row, Col, Form, InputGroup, Card } from 'react-bootstrap';
@@ -8,7 +11,15 @@ import axios from '../../../api/axois';
 const EMP_LOGIN_URL = '/employees/login';
 
 const EmpSignIn = () => {
-    const { setAuth } = useContext(AuthContext);
+    //const { setAuth } = useContext(AuthContext);
+    const { setAuth } = useAuth();
+
+    const navigate = useNavigate();
+    //const location = useLocation();
+    //console.log(`this is location.state`, location.state);
+    //const from = location.state?.from?.pathname || '/';
+    const to = '/employees';
+
     const userRef = useRef();
     const errRef = useRef();
 
@@ -22,7 +33,6 @@ const EmpSignIn = () => {
     const [policyNo, setPolicyNo] = useState('');
     const [_id, setId] = useState('');
     const [errMsg, setErrMsg] = useState('');
-    const [success, setSuccess] = useState(false);
 
     //focus on the email input - only on page load
     useEffect(() => {
@@ -67,17 +77,16 @@ const EmpSignIn = () => {
                     withCredentials: true,
                 }
             );
-
+            
+            const user = response.data?.result?._id;
             const accessToken = response?.data?.accessToken;
-            const roles = response?.data?.result?.role;
-            const roleValues = Object.values(roles);
-            setAuth({ email, _id, password, policyNo, roleValues, accessToken });
-            //clear input fields
+            const roles = Object.values(response?.data?.result?.role);
+            setAuth({ email, user, password, policyNo, roles, accessToken });
             setEmail('')
             setPassowrd('')
             setPolicyNo('')
             setId('')
-            setSuccess(true)
+            navigate(to, { replace: true });
         } catch (error) {
             console.log(error)
             if (!error?.response) {
@@ -95,14 +104,6 @@ const EmpSignIn = () => {
 
     return (
         <>
-        {success ? (
-            <section>
-                <h1>You are Logged In!</h1>
-                <p>
-                    <a href='#'> Go to Home</a>
-                </p>
-            </section>
-        ) : (
         <section>
             <Container className='my-3'>
                 <Row className='d-flex justify-content-center align-items-center'>
@@ -215,7 +216,7 @@ const EmpSignIn = () => {
 
             </Container>
         </section>
-        )}
+        
         </>
     )
 }
