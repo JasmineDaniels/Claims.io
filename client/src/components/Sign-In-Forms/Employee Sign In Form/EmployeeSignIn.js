@@ -1,12 +1,13 @@
-//import { useState, useRef, useEffect, useContext } from "react";
 import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate, useLocation, Navigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 // import AuthContext from "../../../context/AuthProvider";
 import useAuth from "../../../hooks/useAuth";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Row, Col, Form, InputGroup, Card } from 'react-bootstrap';
 import axios from '../../../api/axois';
+// const path = require('path');
+// require('dotenv').config({ path: path.resolve(__dirname, '../../../../.env') });
 
 const EMP_LOGIN_URL = '/employees/login';
 
@@ -18,7 +19,8 @@ const EmpSignIn = () => {
     //const location = useLocation();
     //console.log(`this is location.state`, location.state);
     //const from = location.state?.from?.pathname || '/';
-    const to = '/employees';
+    const agent = '/employees';
+    const admin = '/admin'
 
     const userRef = useRef();
     const errRef = useRef();
@@ -86,7 +88,12 @@ const EmpSignIn = () => {
             setPassowrd('')
             setPolicyNo('')
             setId('')
-            navigate(to, { replace: true });
+            //navigate(agent, { replace: true })
+            if (roles.includes(5150)) {
+                navigate(admin, { replace: true });
+            } else if (roles.includes(1984)) {
+                navigate(agent, { replace: true });
+            }
         } catch (error) {
             console.log(error)
             if (!error?.response) {
@@ -118,7 +125,7 @@ const EmpSignIn = () => {
                                 </h4>
                             </div>
                             <Card.Body>
-                                <h1>Sign In</h1>
+                                <h1 className="text-center">Sign In</h1>
                                 <Form onSubmit={handleSubmit}>
 
                                     <InputGroup className='my-3'>
@@ -160,7 +167,7 @@ const EmpSignIn = () => {
                                     <br />
                                     <hr />
 
-                                    <p style={{ fontWeight: 'bold' }}>Or Sign In with:</p>
+                                    <p className='text-center' style={{ fontWeight: 'bold' }}>Or Sign In with:</p>
                                     <InputGroup className='my-3'>
                                         <InputGroup.Text htmlFor='policy_number'>
                                             Policy Number:
@@ -194,18 +201,23 @@ const EmpSignIn = () => {
                                         Please enter a valid Account ID.
                                     </p>
 
+                                    <div className='text-center'>
                                     <button
                                         className='btn btn-warning mb-3'
                                         type='submit'
                                         disabled={!password ? true : false}>
                                         Sign In
                                     </button>
-
+                                    </div>
+                                    
+                                    <div className='text-center'>
                                     <p style={{ fontWeight: 'bold' }}>
                                         Create an Account? <br />
                                         {/* react router link */}
                                         <a href="#">Sign Up</a>
                                     </p>
+                                    </div>
+                                    
                                 </Form>
                             </Card.Body>
 

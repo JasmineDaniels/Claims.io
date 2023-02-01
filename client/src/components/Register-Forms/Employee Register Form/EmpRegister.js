@@ -155,7 +155,7 @@ const EmpRegister = () => {
                                         {errMsg}
                                     </h4>
                                     <Card.Body>
-                                        <h1>Register</h1>
+                                        <h1 className="text-center">Register</h1>
                                         <Form onSubmit={handleSubmit}>
 
 

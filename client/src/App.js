@@ -7,15 +7,15 @@ import UserLogin from "./pages/UserLogin";
 import UserSignUp from "./pages/UserSignUp";
 import MainNavigation from "./components/Navigation/MainNav/MainNavigation";
 import EmpNavigation from "./components/Navigation/EmployeeNav/EmpNavigation";
-import EmpRegister from "./components/Register Forms/Employee Register Form/EmpRegister";
+import EmpRegister from "./components/Register-Forms/Employee Register Form/EmpRegister";
 import Header from "./components/Header";
-import EmpSignIn from "./components/Sign-In Forms/Employee Sign In Form/EmployeeSignIn";
+import EmpSignIn from "./components/Sign-In-Forms/Employee Sign In Form/EmployeeSignIn";
 import EmployeeDash from "./pages/Employee-Dash";
 import UserDash from "./pages/User-Dash";
 import AdminDash from "./pages/Admin-Dash";
 import Route404 from "./pages/Missing";
 import Route401 from "./pages/Unathorized";
-import RequireAuth from "./components/Register Forms/Employee Register Form/RequireAuth";
+import RequireAuth from "./components/Sign-In-Forms/Employee Sign In Form/RequireAuth";
 
 function App() {
   return (
@@ -40,9 +40,9 @@ function App() {
         <Route path="/employees" element={<EmployeeDash/>}/>
       </Route>
 
-      {/* <Route element={<RequireAuth allowedRoles={[5150]}/>}>
+      <Route element={<RequireAuth allowedRoles={[5150]}/>}>
         <Route path="/admin" element={<AdminDash/>}/>
-      </Route> */}
+      </Route>
 
       <Route path="/unauthorized" element={<Route401/>}/>
       <Route path="*" element={<Route404/>}/>
