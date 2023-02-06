@@ -6,8 +6,7 @@ import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Row, Col, Form, InputGroup, Card } from 'react-bootstrap';
 import axios from '../../../api/axois';
-// const path = require('path');
-// require('dotenv').config({ path: path.resolve(__dirname, '../../../../.env') });
+
 
 const EMP_LOGIN_URL = '/employees/login';
 
@@ -214,7 +213,7 @@ const EmpSignIn = () => {
                                     <p style={{ fontWeight: 'bold' }}>
                                         Create an Account? <br />
                                         {/* react router link */}
-                                        <a href="#">Sign Up</a>
+                                        <Link to={'/employee-signup'}> Sign Up</Link>
                                     </p>
                                     </div>
                                     
