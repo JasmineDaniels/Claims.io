@@ -1,25 +1,39 @@
 import { useEffect, useState } from 'react';
-import axios from '../../api/axois';
+//import axios from '../../api/axois';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const AllEmployees = () => {
     const [employees, setEmployees] = useState([]);
-    const [mounted, setMounted] = useState(false);
-
+    const axiosPrivate = useAxiosPrivate();
     //console.log(`this is employees`, employees);
+    const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
-        setMounted(true);
+        let isMounted = true;
+        const controller = new AbortController();
         (async () => {
-            const empData = await axios.get('employees/');
-            const emp = empData.data;
-            
-            //setEmployees(employees => [...employees, emp]);
-            setEmployees(emp)
+            try {
+                const empData = await axiosPrivate.get('employees/', {
+                    signal: controller.signal
+                });
+                const emp = empData.data;
+                //setEmployees(employees => [...employees, emp]);
+                console.log(`mounted`);
+                isMounted && setEmployees(emp);
+            } catch (error) {
+                console.error(error);
+                navigate('/employee-login', { state: { from: location }, replace: true });
+            }
         })();
 
-        // return() => {
-        //     setMounted(false);
-        // }
+        return () => {
+            console.log(`unmounted`)
+            isMounted = false;
+            //cancel any pending requests
+            controller.abort();
+        }
     }, []);
 
     return (
@@ -28,13 +42,14 @@ const AllEmployees = () => {
             {employees?.length
                 ? (
                     <ul>
-                        
+
                         {employees.map((emp, index) => {
                             return (
-                            <li key={index}>
-                                {emp?.firstName}
-                            </li>
-                        )})}
+                                <li key={index}>
+                                    {emp?.firstName}
+                                </li>
+                            )
+                        })}
                     </ul>
                 ) : (
                     <p> No employees to display.</p>

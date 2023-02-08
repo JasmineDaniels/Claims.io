@@ -78,7 +78,7 @@ const EmpSignIn = () => {
                     withCredentials: true,
                 }
             );
-            
+            console.log(response.data);
             const user = response.data?.result?._id;
             const accessToken = response?.data?.accessToken;
             const roles = Object.values(response?.data?.result?.role);
