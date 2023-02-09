@@ -43,7 +43,7 @@ module.exports = {
     signRefreshToken: function ({ email, _id }) {
         const payload = { email, _id };
     
-        return jwt.sign({ data: payload }, refreshSecret, { expiresIn: '10m' });
+        return jwt.sign({ data: payload }, refreshSecret, { expiresIn: '1m' });
         //return jwt.sign({ data: payload }, refreshSecret, { expiresIn: '30s' });
         //return jwt.sign({ data: payload }, refreshSecret, { expiresIn: '1hr' });
     },

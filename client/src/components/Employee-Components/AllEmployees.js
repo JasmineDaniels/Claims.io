@@ -24,7 +24,7 @@ const AllEmployees = () => {
                 isMounted && setEmployees(emp);
             } catch (error) {
                 console.error(error);
-                navigate('/employee-login', { state: { from: location }, replace: true });
+                //navigate('/employee-login', { state: { from: location }, replace: true });
             }
         })();
 

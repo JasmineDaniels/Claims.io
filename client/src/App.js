@@ -16,7 +16,7 @@ import AdminDash from "./pages/Admin-Dash";
 import Route404 from "./pages/Missing";
 import Route401 from "./pages/Unathorized";
 import RequireAuth from "./components/Sign-In-Forms/Employee Sign In Form/RequireAuth";
-import AuthLogout from "./hooks/AuthLogout";
+//import AuthLogout from "./hooks/AuthLogout";
 
 function App() {
   return (
@@ -45,7 +45,7 @@ function App() {
         <Route path="/admin" element={<AdminDash/>}/>
       </Route>
 
-      <Route path="/logout" element={<AuthLogout/>}/>
+      {/* <Route path="/logout" element={<AuthLogout/>}/> */}
       <Route path="/unauthorized" element={<Route401/>}/>
       <Route path="*" element={<Route404/>}/>
 
