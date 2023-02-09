@@ -34,6 +34,8 @@ const AllEmployees = () => {
             //cancel any pending requests
             controller.abort();
         }
+    // eslint-disable-next-line
+    // react-hooks/exhaustive-deps 
     }, []);
 
     return (

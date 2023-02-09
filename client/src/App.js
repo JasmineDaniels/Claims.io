@@ -1,4 +1,4 @@
-import TempHeader from "./components/temp-header";
+import Home from "./pages/HomePage";
 import { Routes, Route } from 'react-router-dom';
 //import Layout from "./pages/Layout";
 import About from "./pages/About";
@@ -25,7 +25,7 @@ function App() {
     <Header/>
     <MainNavigation/>
     <Routes>
-      <Route path="/" element={<TempHeader/>}/>
+      <Route path="/" element={<Home/>}/>
       <Route path="employee-login" element={<EmpSignIn />} />
       <Route path="employee-signUp" element={<EmpRegister />} />
       

@@ -1,0 +1,11 @@
+.video-player{
+    /* width: 720px;
+    height: 350px; */
+    width: 800px;
+    height: 250px;
+    /* padding: 0; */
+}
+
+.rh5v-DefaultPlayer_component{
+    width: fit-content;
+}
