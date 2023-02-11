@@ -4,12 +4,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Row, Col, Form, InputGroup, Card } from 'react-bootstrap';
 import axios from '../../../api/axois';
 import './emp-register.css';
+import { Link } from 'react-router-dom';
 
 const EMAIL_RGX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PW_RGX = /^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[!@?#$%])[a-zA-Z0-9!?]{8,24}/;
 const EMP_REGISTER_URL = '/employees/'
-const USER_REGISTER_URL = '/users/'
-
 
 const EmpRegister = () => {
     const userRef = useRef();
@@ -94,28 +93,19 @@ const EmpRegister = () => {
                 }
             );
 
-            // const response = await fetch('http://localhost:5000/api/employees/', {
-            //     method: 'POST',
-            //     headers: {'Content-Type': 'application/json'},
-            //     credentials: 'include',
-            //     body: JSON.stringify({ 
-            //         firstName, 
-            //         lastName, 
-            //         email, 
-            //         password: pwd }),
-            //     }
-            // );
             console.log(response.data);
             console.log(response.accessToken);
             console.log(JSON.stringify(response));
             setSuccess(true)
             // clear input fields
-            setFirstName('')
-            setLastName('')
-            setEmail('')
-            setMatchEmail('')
-            setPwd('')
-            setMatchPwd('')
+            setFirstName('');
+            setLastName('');
+            setEmail('');
+            setMatchEmail('');
+            setPwd('');
+            setMatchPwd('');
+            //navigate(EMP_LOGIN_URL) 
+            //navigate(from, { replace: true })
         } catch (error) {
             console.log(error)
             if (!error?.response) {
@@ -136,11 +126,13 @@ const EmpRegister = () => {
     return (
         <>
             {success ? (
-                <section>
+                <section className='text-center'>
                     <h1>Success!</h1>
-                    <p>
-                        <a href='#'> Sign In</a>
-                    </p>
+                    <h5>Account successfully created.</h5>
+                    <h5>Please Sign In.</h5>
+                    <button className='btn btn-warning'>
+                        <Link to={'/employee-login'}> Sign In</Link>
+                    </button>
                 </section>
             ) : (
                 <section>
@@ -150,7 +142,7 @@ const EmpRegister = () => {
                                 <Card className='visual rounded-3'>
                                     <h4
                                         ref={errRef}
-                                        className={errMsg ? 'errfont' : 'offscreen'}
+                                        className={errMsg ? 'errfont text-center' : 'offscreen'}
                                         aria-live="assertive">
                                         {errMsg}
                                     </h4>
@@ -220,13 +212,13 @@ const EmpRegister = () => {
                                                     aria-describedby='emailnote'
                                                     aria-invalid={validEmail ? 'false' : 'true'}
                                                     onFocus={() => setEmailFocus(true)}
-                                                    onBlur={() => setEmailFocus(false)} 
+                                                    onBlur={() => setEmailFocus(false)}
                                                 />
-                                                
+
                                             </InputGroup>
                                             <p id='emailnote' className={emailFocus && !validEmail ? '' : 'offscreen'}>
-                                                    <FontAwesomeIcon icon={faInfoCircle} />
-                                                    Please enter a valid email.
+                                                <FontAwesomeIcon icon={faInfoCircle} className="mx-1" />
+                                                Please enter a valid email.
                                             </p>
 
                                             <InputGroup className='my-3'>
@@ -248,12 +240,12 @@ const EmpRegister = () => {
                                                     aria-describedby='confirmEmailNote'
                                                     aria-invalid={validEmailMatch ? 'false' : 'true'}
                                                     onFocus={() => setMatchEmailFocus(true)}
-                                                    onBlur={() => setMatchEmailFocus(false)} 
+                                                    onBlur={() => setMatchEmailFocus(false)}
                                                 />
                                             </InputGroup>
                                             <p id='confirmEmailNote' className={matchEmailFocus && !validEmailMatch ? '' : 'offscreen'}>
-                                                    <FontAwesomeIcon icon={faInfoCircle} />
-                                                    Must match the email field.
+                                                <FontAwesomeIcon icon={faInfoCircle} className="mx-1" />
+                                                Must match the email field.
                                             </p>
 
                                             <InputGroup className='my-3'>
@@ -274,19 +266,19 @@ const EmpRegister = () => {
                                                     aria-describedby='pwdnote'
                                                     aria-invalid={validPwd ? 'false' : 'true'}
                                                     onFocus={() => setPwdFocus(true)}
-                                                    onBlur={() => setPwdFocus(false)} 
+                                                    onBlur={() => setPwdFocus(false)}
                                                 />
                                             </InputGroup>
                                             <p id='pwdnote' className={pwdFocus && !validPwd ? '' : 'offscreen'}>
-                                                    <FontAwesomeIcon icon={faInfoCircle} />
-                                                    <br/>
-                                                    Password Must include: <br/> 8 to 24 characters.<br /> Uppercase and lowercase letters. <br/> A Number. <br/> A special character.<br />
-                                                    Allowed special characters: <span aria-label='exclamation mark'>!</span>
-                                                    <span aria-label='question mark'>?</span>
-                                                    <span aria-label='at symbol'>@</span>
-                                                    <span aria-label='dollar sign'>$</span>
-                                                    <span aria-label='percent symbol'>%</span>
-                                                    <span aria-label='hash symbol'>#</span>
+                                                <FontAwesomeIcon icon={faInfoCircle} />
+                                                <br />
+                                                Password Must include: <br /> 8 to 24 characters.<br /> Uppercase and lowercase letters. <br /> A Number. <br /> A special character.<br />
+                                                Allowed special characters: <span aria-label='exclamation mark'>!</span>
+                                                <span aria-label='question mark'>?</span>
+                                                <span aria-label='at symbol'>@</span>
+                                                <span aria-label='dollar sign'>$</span>
+                                                <span aria-label='percent symbol'>%</span>
+                                                <span aria-label='hash symbol'>#</span>
                                             </p>
 
                                             <InputGroup className='my-3'>
@@ -307,20 +299,22 @@ const EmpRegister = () => {
                                                     aria-describedby='confirmPwdNote'
                                                     aria-invalid={validPwdMatch ? 'false' : 'true'}
                                                     onFocus={() => setMatchPwdFocus(true)}
-                                                    onBlur={() => setMatchPwdFocus(false)} 
+                                                    onBlur={() => setMatchPwdFocus(false)}
                                                 />
                                             </InputGroup>
                                             <p id='confirmPwNote' className={matchPwdFocus && !validPwdMatch ? '' : 'offscreen'}>
                                                 <FontAwesomeIcon icon={faInfoCircle} />
                                                 Must match the password field.
                                             </p>
+                                            <div className='text-center'>
+                                                <button
+                                                    className='btn btn-warning'
+                                                    type='submit'
+                                                    disabled={!firstName || !lastName || !validEmail || !validPwd || !validPwdMatch || !validEmailMatch ? true : false}>
+                                                    Sign Up
+                                                </button>
+                                            </div>
 
-                                            <button
-                                            className='btn btn-warning'
-                                            type='submit'
-                                            disabled={!firstName || !lastName || !validEmail || !validPwd || !validPwdMatch || !validEmailMatch ? true : false}>
-                                                Sign Up
-                                            </button>
                                         </Form>
                                     </Card.Body>
 
