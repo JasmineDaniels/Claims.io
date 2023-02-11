@@ -8,9 +8,9 @@ import { Container, Row, Col, Form, InputGroup, Card } from 'react-bootstrap';
 import axios from '../../../api/axois';
 
 
-const EMP_LOGIN_URL = '/employees/login';
+const USER_LOGIN_URL = '/users/login';
 
-const EmpSignIn = () => {
+const UserSignIn = () => {
     //const { setAuth } = useContext(AuthContext);
     const { setAuth } = useAuth();
 
@@ -18,8 +18,8 @@ const EmpSignIn = () => {
     //const location = useLocation();
     //console.log(`this is location.state`, location.state);
     //const from = location.state?.from?.pathname || '/';
-    const agent = '/employees';
-    const admin = '/admin'
+    const userDash = '/users';
+    
 
     const userRef = useRef();
     const errRef = useRef();
@@ -69,7 +69,7 @@ const EmpSignIn = () => {
             //     }),
             // });
 
-            const response = await axios.post(EMP_LOGIN_URL,
+            const response = await axios.post(USER_LOGIN_URL,
                 JSON.stringify({ email, password, policyNo, _id }),
                 {
                     headers: {
@@ -79,20 +79,16 @@ const EmpSignIn = () => {
                 }
             );
             console.log(response.data);
-            const user = response.data?.result?._id;
-            const accessToken = response?.data?.accessToken;
-            const roles = Object.values(response?.data?.result?.role);
+            const { accessToken, result } = response.data;
+            const user = result?._id;
+            //const accessToken = response?.data?.accessToken;
+            const roles = Object.values(result?.role);
             setAuth({ email, user, password, policyNo, roles, accessToken });
             setEmail('')
             setPassowrd('')
             setPolicyNo('')
             setId('')
-            //navigate(agent, { replace: true })
-            if (roles.includes(5150)) {
-                navigate(admin, { replace: true });
-            } else if (roles.includes(1984)) {
-                navigate(agent, { replace: true });
-            }
+            navigate(userDash, { replace: true })
         } catch (error) {
             console.log(error)
             if (!error?.response) {
@@ -124,7 +120,7 @@ const EmpSignIn = () => {
                                 </h4>
                             </div>
                             <Card.Body>
-                                <h1 className="text-center">Employee Sign In</h1>
+                                <h1 className="text-center">Client Sign In</h1>
                                 <Form onSubmit={handleSubmit}>
 
                                     <InputGroup className='my-3'>
@@ -232,4 +228,4 @@ const EmpSignIn = () => {
     )
 }
 
-export default EmpSignIn;
+export default UserSignIn;

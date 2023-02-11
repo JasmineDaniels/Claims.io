@@ -1,6 +1,7 @@
 const { User } = require('../models');
 const { signToken, signRefreshToken } = require('../utils/auth');
 const { findClientClaims, findClaimsByID } = require('../utils/helpers');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const path = require('path')
 require('dotenv').config({path: path.resolve(__dirname, '../.env')})
@@ -30,13 +31,21 @@ const createNewUser = async (req, res) => {
 
 const userLogin = async (req, res) => {
     try {
-        const user = await User.findOne({
-            $or: [{ policyNo: req.body.policyNo }, { _id: req.body._id }, { email: req.body.email }]
-        }).exec();
+        let user;
+        
+        if (req.body.email !== '') {
+            //user = await user.findOne({ email: req.body.email }).lean();
+            user = await User.findOne({ email: req.body.email }).exec();
+        } else if (req.body._id !== '') {
+            user = await User.findOne({ _id: req.body._id }).exec();
+        } 
+        
         if (!user) {
             return res.status(400).json({ message: "Can't find this user" });
         }
-        const checkPassword = await user.checkPW(req.body.password);
+        //const checkPassword = await user.checkPW(req.body.password);
+
+        const checkPassword = await bcrypt.compare(req.body.password, user.password);
         if (!checkPassword) {
             return res.status(400).json({ message: 'Wrong password!' });
         }
@@ -53,7 +62,7 @@ const userLogin = async (req, res) => {
         res.cookie('jwt', refreshToken, {
             httpOnly: true,
             sameSite: 'None',
-            //secure: true,
+            secure: true,
             maxAge: 24 * 60 * 60 * 1000
         });
         res.json({ accessToken, result })

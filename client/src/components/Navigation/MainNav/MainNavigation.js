@@ -2,8 +2,55 @@ import { Link } from 'react-router-dom';
 import { Row, Navbar } from 'react-bootstrap';
 import lighthouse120px from '../../../images/lighthouse-120px.png';
 import './main-nav.css';
-export default function MainNavigation() {
+import useAuth from '../../../hooks/useAuth';
+import { useNavigate } from "react-router-dom";
+import { default as axios } from '../../../api/axois';
+import { useState } from 'react';
+const home = '/'
 
+export default function MainNavigation() {
+    const { auth, setAuth } = useAuth();
+    const navigate = useNavigate();
+    const [ loggedIn, setLoggedIn ] = useState(false);
+    const [ userRole, setUserRole ] = useState([]);
+
+    // let userRole;
+    // const isUser = async () => {
+    //     userRole = await auth.roles.length
+    //     if(userRole === 1){
+    //         setLoggedIn(true)
+    //     } 
+    //     return userRole
+    //     // if(auth.roles.length === 1)
+    //     // if(auth.roles.includes(1984))
+    // }
+    // isUser()
+
+    console.log(userRole?.length);
+    console.log(auth);
+    
+    (async () => {
+        await auth.roles;
+        if(auth?.roles){
+            setUserRole(auth.roles)
+            if (userRole.length === 1){
+                setLoggedIn(true)
+            }
+        } 
+    })()
+    
+    
+    const handleLogout =  async (e) => {
+        e.preventDefault();
+        const response = await axios.get('users/logout', {
+            withCredentials: true,        
+        });
+        console.log(response)
+        setAuth({ email: '', user: null, policyNo: '', roles: '', accessToken: '' });
+        setLoggedIn(false);
+        console.log(auth);
+        navigate(home, { replace: true });
+    };
     return (
         <>
             <Row>
@@ -19,7 +66,7 @@ export default function MainNavigation() {
 
                             <div >
                                 <Link className="navbar-brand" to={'/'}>
-                                    <span to={'/'} className='site-title site-title-LH pt-4'>Claims.io </span> 
+                                    <span to={'/'} className='site-title site-title-LH pt-4'>Claims.io </span>
                                     <span className='site-title-LH'> by LightHouse</span>
                                 </Link>
                             </div>
@@ -41,8 +88,17 @@ export default function MainNavigation() {
                                 <ul >
                                     <Link to={'/about'} className="nav-link mx-2">About</Link>
                                     <Link to={'/pricing'} className="nav-link ">Pricing</Link>
-                                    <Link to={'/user-login'} className="nav-link ">Login</Link>
-                                    <Link to={'/user-signUp'} className="nav-link mx-2">Sign Up</Link>
+                                    {loggedIn ? (
+                                        <Link to={'/logout'} className='nav-link mx-2' onClick={handleLogout}>Logout</Link>
+                                    ) : (
+                                        <>
+                                            <Link to={'/user-login'} className="nav-link ">Login</Link>
+                                            <Link to={'/user-signUp'} className="nav-link mx-2">Sign Up</Link>
+                                        </>
+                                    )
+
+                                    }
+
                                 </ul>
                             </div>
                         </div>
