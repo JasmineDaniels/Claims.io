@@ -14,18 +14,6 @@ export default function MainNavigation() {
     const [ loggedIn, setLoggedIn ] = useState(false);
     const [ userRole, setUserRole ] = useState([]);
 
-    // let userRole;
-    // const isUser = async () => {
-    //     userRole = await auth.roles.length
-    //     if(userRole === 1){
-    //         setLoggedIn(true)
-    //     } 
-    //     return userRole
-    //     // if(auth.roles.length === 1)
-    //     // if(auth.roles.includes(1984))
-    // }
-    // isUser()
-
     console.log(userRole?.length);
     console.log(auth);
     
