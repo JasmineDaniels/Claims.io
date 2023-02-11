@@ -57,18 +57,6 @@ const UserSignIn = () => {
                 setErrMsg(`Password is required.`)
             };
 
-            // const response = await fetch('http://localhost:5000/api/employees/login', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     credentials: 'include',
-            //     body: JSON.stringify({
-            //         email,
-            //         password,
-            //         id,
-            //         policyNo
-            //     }),
-            // });
-
             const response = await axios.post(USER_LOGIN_URL,
                 JSON.stringify({ email, password, policyNo, _id }),
                 {
@@ -209,7 +197,7 @@ const UserSignIn = () => {
                                     <p style={{ fontWeight: 'bold' }}>
                                         Create an Account? <br />
                                         {/* react router link */}
-                                        <Link to={'/employee-signup'}> Sign Up</Link>
+                                        <Link to={'/user-signup'}> Sign Up</Link>
                                     </p>
                                     </div>
                                     

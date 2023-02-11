@@ -114,7 +114,7 @@ const EmpSignIn = () => {
                 <Container className='my-3'>
                     <Row className='d-flex justify-content-center align-items-center'>
                         <Col md={6}>
-                            <Card className='visual rounded-3'>
+                            <Card className='crimson-bkgrd rounded-3'>
                                 <div>
                                     <h4
                                         ref={errRef}

@@ -14,7 +14,12 @@
 }
 
 .visual{
-    background-color: #fadd8f !important;
+    background-color: var(--LHYellow) !important;
+}
+
+.crimson-bkgrd{
+    background-color: var(--LHCrimson) !important;
+    color: white;
 }
 
 .errfont{

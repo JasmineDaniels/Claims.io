@@ -1,3 +1,8 @@
-export default function userSignUp(){
-    return <h1>userSignUp</h1>
+import UserRegister from "../components/Register-Forms/User Register Form/UserRegister"
+export default function userSignUp() {
+    return (
+        <>
+        <UserRegister/>
+        </>
+    )
 }

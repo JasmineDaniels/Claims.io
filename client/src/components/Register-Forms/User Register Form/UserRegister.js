@@ -3,14 +3,13 @@ import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icon
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Row, Col, Form, InputGroup, Card } from 'react-bootstrap';
 import axios from '../../../api/axois';
-import './emp-register.css';
 import { Link } from 'react-router-dom';
 
 const EMAIL_RGX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PW_RGX = /^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[!@?#$%])[a-zA-Z0-9!?]{8,24}/;
-const EMP_REGISTER_URL = '/employees/'
+const USER_REGISTER_URL = '/users/'
 
-const EmpRegister = () => {
+const UserRegister = () => {
     const userRef = useRef();
     const errRef = useRef();
 
@@ -81,7 +80,7 @@ const EmpRegister = () => {
         }
 
         try {
-            const response = await axios.post(EMP_REGISTER_URL,
+            const response = await axios.post(USER_REGISTER_URL,
                 JSON.stringify({ firstName, lastName, email, password: pwd }),
                 {
                     headers: {
@@ -131,7 +130,7 @@ const EmpRegister = () => {
                     <h5>Account successfully created.</h5>
                     <h5>Please Sign In.</h5>
                     <button className='btn btn-warning'>
-                        <Link to={'/employee-login'}> Sign In</Link>
+                        <Link to={'/user-login'}> Sign In</Link>
                     </button>
                 </section>
             ) : (
@@ -139,7 +138,7 @@ const EmpRegister = () => {
                     <Container className='my-3'>
                         <Row className='d-flex justify-content-center align-items-center'>
                             <Col md={6}>
-                                <Card className='crimson-bkgrd rounded-3'>
+                                <Card className='visual rounded-3'>
                                     <h4
                                         ref={errRef}
                                         className={errMsg ? 'errfont text-center' : 'offscreen'}
@@ -147,7 +146,7 @@ const EmpRegister = () => {
                                         {errMsg}
                                     </h4>
                                     <Card.Body>
-                                        <h1 className="text-center">Employee Register</h1>
+                                        <h1 className="text-center">Client Register</h1>
                                         <Form onSubmit={handleSubmit}>
 
 
@@ -330,4 +329,4 @@ const EmpRegister = () => {
     )
 }
 
-export default EmpRegister;
+export default UserRegister;

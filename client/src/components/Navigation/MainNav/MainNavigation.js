@@ -98,7 +98,7 @@ export default function MainNavigation() {
                                         <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"></input>
                                     </div>
                                     <div className='col-md-4 mx-2'>
-                                        <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                                        <button className="btn btn-outline-success my-2 my-sm-0 disabled" type="submit">Search</button>
                                     </div>
                                 </form>
                             </div>
