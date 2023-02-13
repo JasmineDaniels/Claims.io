@@ -178,7 +178,7 @@ const UserRegister = () => {
                                                     type='text'
                                                     //id='lastName'
                                                     //ref={userRef}
-                                                    placeholder='Enter Last Name'
+                                                    //placeholder='Enter Last Name'
                                                     autoComplete='off'
                                                     onChange={(e) => setLastName(e.target.value)}
                                                     required
@@ -206,7 +206,7 @@ const UserRegister = () => {
                                                     onChange={(e) => setEmail(e.target.value)}
                                                     required
                                                     autoComplete='off'
-                                                    placeholder='Enter Email'
+                                                    //placeholder='Enter Email'
                                                     aria-label='Email'
                                                     aria-describedby='emailnote'
                                                     aria-invalid={validEmail ? 'false' : 'true'}

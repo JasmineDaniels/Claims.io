@@ -110,7 +110,7 @@ const EmpSignIn = () => {
 
     return (
         <>
-            <section>
+            <section className="main">
                 <Container className='my-3'>
                     <Row className='d-flex justify-content-center align-items-center'>
                         <Col md={6}>

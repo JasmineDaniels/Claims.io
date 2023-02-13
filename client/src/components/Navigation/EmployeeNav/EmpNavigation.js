@@ -35,7 +35,7 @@ const EmpNavigation = () => {
     
     return (
         <div className='row '>
-            <div className='col pt-2 emp-nav-border'>
+            <div className='col pt-2 emp-nav-border border-bottom border-danger'>
                 <nav className="emp-nav float-end">
                     <h6 className='text-center'> Employee Portal</h6>
                     <ul>

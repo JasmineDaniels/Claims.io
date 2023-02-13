@@ -135,7 +135,7 @@ const EmpRegister = () => {
                     </button>
                 </section>
             ) : (
-                <section>
+                <section className="main">
                     <Container className='my-3'>
                         <Row className='d-flex justify-content-center align-items-center'>
                             <Col md={6}>
@@ -179,7 +179,7 @@ const EmpRegister = () => {
                                                     type='text'
                                                     //id='lastName'
                                                     //ref={userRef}
-                                                    placeholder='Enter Last Name'
+                                                    //placeholder='Enter Last Name'
                                                     autoComplete='off'
                                                     onChange={(e) => setLastName(e.target.value)}
                                                     required
@@ -207,7 +207,7 @@ const EmpRegister = () => {
                                                     onChange={(e) => setEmail(e.target.value)}
                                                     required
                                                     autoComplete='off'
-                                                    placeholder='Enter Email'
+                                                    //placeholder='Enter Email'
                                                     aria-label='Email'
                                                     aria-describedby='emailnote'
                                                     aria-invalid={validEmail ? 'false' : 'true'}
