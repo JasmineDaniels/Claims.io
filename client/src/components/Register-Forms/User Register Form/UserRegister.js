@@ -45,8 +45,6 @@ const UserRegister = () => {
 
     useEffect(() => {
         const result = EMAIL_RGX.test(email);
-        console.log(result);
-        console.log(email);
         setValidEmail(result);
         const match = email === matchEmail;
         setValidEmailMatch(match)
@@ -54,8 +52,6 @@ const UserRegister = () => {
 
     useEffect(() => {
         const result = PW_RGX.test(pwd);
-        console.log(result);
-        console.log(pwd);
         setValidPwd(result);
         const match = pwd === matchPwd;
         setValidPwdMatch(match)
@@ -87,14 +83,9 @@ const UserRegister = () => {
                         'Content-Type': 'application/json',
                     },
                     withCredentials: true,
-                    //body: JSON.stringify({ firstName, lastName, email, password: pwd }),
-                    //"Access-Control-Allow-Credentials": true
                 }
             );
 
-            console.log(response.data);
-            console.log(response.accessToken);
-            console.log(JSON.stringify(response));
             setSuccess(true)
             // clear input fields
             setFirstName('');
@@ -106,7 +97,6 @@ const UserRegister = () => {
             //navigate(EMP_LOGIN_URL) 
             //navigate(from, { replace: true })
         } catch (error) {
-            console.log(error)
             if (!error?.response) {
                 setErrMsg('No Server Response');
             } else if (errMsg.response?.status === 409) {

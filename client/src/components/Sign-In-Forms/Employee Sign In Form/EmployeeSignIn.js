@@ -15,9 +15,6 @@ const EmpSignIn = () => {
     const { setAuth } = useAuth();
 
     const navigate = useNavigate();
-    //const location = useLocation();
-    //console.log(`this is location.state`, location.state);
-    //const from = location.state?.from?.pathname || '/';
     const agent = '/employees';
     const admin = '/admin'
 
@@ -40,7 +37,7 @@ const EmpSignIn = () => {
         userRef.current.focus();
     }, []);
 
-    //errMsg useEffect
+
     useEffect(() => {
         setErrMsg('');
     }, [email, password, _id])
@@ -57,18 +54,6 @@ const EmpSignIn = () => {
                 setErrMsg(`Password is required.`)
             };
 
-            // const response = await fetch('http://localhost:5000/api/employees/login', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     credentials: 'include',
-            //     body: JSON.stringify({
-            //         email,
-            //         password,
-            //         id,
-            //         policyNo
-            //     }),
-            // });
-
             const response = await axios.post(EMP_LOGIN_URL,
                 JSON.stringify({ email, password, policyNo, _id }),
                 {
@@ -78,7 +63,7 @@ const EmpSignIn = () => {
                     withCredentials: true,
                 }
             );
-            console.log(response.data);
+            
             const user = response.data?.result?._id;
             const accessToken = response?.data?.accessToken;
             const roles = Object.values(response?.data?.result?.role);
@@ -94,7 +79,7 @@ const EmpSignIn = () => {
                 navigate(agent, { replace: true });
             }
         } catch (error) {
-            console.log(error)
+            // console.log(error)
             if (!error?.response) {
                 setErrMsg('No Server Response');
             } else if (error.response?.status === 400) {

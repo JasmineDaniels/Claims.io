@@ -46,8 +46,6 @@ const EmpRegister = () => {
 
     useEffect(() => {
         const result = EMAIL_RGX.test(email);
-        console.log(result);
-        console.log(email);
         setValidEmail(result);
         const match = email === matchEmail;
         setValidEmailMatch(match)
@@ -55,8 +53,6 @@ const EmpRegister = () => {
 
     useEffect(() => {
         const result = PW_RGX.test(pwd);
-        console.log(result);
-        console.log(pwd);
         setValidPwd(result);
         const match = pwd === matchPwd;
         setValidPwdMatch(match)
@@ -88,14 +84,11 @@ const EmpRegister = () => {
                         'Content-Type': 'application/json',
                     },
                     withCredentials: true,
-                    //body: JSON.stringify({ firstName, lastName, email, password: pwd }),
-                    //"Access-Control-Allow-Credentials": true
+                    
                 }
             );
 
-            console.log(response.data);
-            console.log(response.accessToken);
-            console.log(JSON.stringify(response));
+            
             setSuccess(true)
             // clear input fields
             setFirstName('');
@@ -112,7 +105,7 @@ const EmpRegister = () => {
                 setErrMsg('No Server Response');
             } else if (errMsg.response?.status === 409) {
                 setErrMsg('This Email already exists')
-                // add sign in button
+                
             } else if (error.response?.status === 409) {
                 setErrMsg(`This Email already exists, Please sign in.`)
             } else {

@@ -9,8 +9,8 @@ const useRefreshToken = () => {
             withCredentials: true
         });
         setAuth(prevState => {
-            console.log(`this is prev state`, prevState);
-            console.log(`this is the new Token`, response.data.accessToken);
+            // console.log(`this is prev state`, prevState);
+            
             //overwrite the old accessToken with a new accessToken
             return { ...prevState, accessToken: response.data.accessToken }
         });

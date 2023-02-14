@@ -13,14 +13,8 @@ const USER_LOGIN_URL = '/users/login';
 const UserSignIn = () => {
     //const { setAuth } = useContext(AuthContext);
     const { setAuth } = useAuth();
-
     const navigate = useNavigate();
-    //const location = useLocation();
-    //console.log(`this is location.state`, location.state);
-    //const from = location.state?.from?.pathname || '/';
     const userDash = '/users';
-    
-
     const userRef = useRef();
     const errRef = useRef();
 
@@ -66,10 +60,9 @@ const UserSignIn = () => {
                     withCredentials: true,
                 }
             );
-            console.log(response.data);
+
             const { accessToken, result } = response.data;
             const user = result?._id;
-            //const accessToken = response?.data?.accessToken;
             const roles = Object.values(result?.role);
             setAuth({ email, user, password, policyNo, roles, accessToken });
             setEmail('')
@@ -78,7 +71,7 @@ const UserSignIn = () => {
             setId('')
             navigate(userDash, { replace: true })
         } catch (error) {
-            console.log(error)
+            //console.log(error)
             if (!error?.response) {
                 setErrMsg('No Server Response');
             } else if (error.response?.status === 400) {

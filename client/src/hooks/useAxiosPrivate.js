@@ -23,7 +23,7 @@ const useAxiosPrivate = () => {
             response => response,
             async (error) => {
                 const prevRequest = error?.config;
-                console.log(`this is prevRequest`, prevRequest);
+                // console.log(`this is prevRequest`, prevRequest);
                 // if token is expired && if request does not have the sent custom property
                 if(error?.response?.status === 403 && !prevRequest.sent){
                     prevRequest.sent = true;
