@@ -14,7 +14,7 @@ export default function About() {
 
                 <p style={{ color: "#ffbd00" }}>The Claims.io front end is currently in development.</p>
 
-                <p> Claims.io is an entrerprise level full service platform designed for immediate assistance to insured casualties.
+                <p> Claims.io is an entrerprise level full service platform <br/>designed for immediate assistance to insured casualties.
                     <br />Please check back frequently for more updates!</p>
 
                 <p>Claims.io was created by <a className="App-link"
@@ -23,7 +23,7 @@ export default function About() {
                     rel="noopener noreferrer">Jasmine Daniels</a> as a website template <br />for prospecting businesses and entrepreneurs big and small.</p>
 
                 <div className="container">
-                    <div className="row features pt-3 pb-3 mx-auto">
+                    <div className="row col-md-8 features pt-3 pb-3 mx-auto">
 
                         <div className="col ">
                             <img src={happycustomer} alt='happy customer' className="happy-happy" />

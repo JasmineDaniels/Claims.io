@@ -1,7 +1,7 @@
 export default function Footer() {
     return (
         <>
-            <footer className="text-center border-top border-danger">
+            <footer className="content text-center border-top border-danger">
 
                 <div className="container">
 

@@ -27,7 +27,7 @@
 
 .features{
     background-color: white;
-    width: 850px;
+    /* width: 850px; */
     /* width: 56.25rem; */
     border-radius: 10px 10px !important;
     
@@ -39,6 +39,8 @@
     background-color: white;
     color: var(--LHRed);
     width: fit-content;
+    font-size: smaller;
+    height: 350px;
     border-radius: 10px 10px;
     margin-right: 6%;
 }
