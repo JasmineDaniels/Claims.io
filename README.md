@@ -43,7 +43,7 @@ https://claimsio-production.up.railway.app
 ### Sign In with your New Account:
 
 #### Agent Signin Demo Image:
-![Claims.io Agent Signin](./client/src/images/client-register.png)
+![Claims.io Agent Signin](./client/src/images/agent-signin.png)
 
 ### OR
 
