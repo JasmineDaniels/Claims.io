@@ -18,7 +18,7 @@ module.exports = {
       }
   
       if (!token) {
-        return res.status(400).json({ message: 'You have no token!' });
+        return res.status(401).json({ message: 'You have no token!' });
       }
   
       // verify token and get user data out of it
@@ -37,11 +37,14 @@ module.exports = {
     signToken: function ({ email, _id, role }) {
       const payload = { email, _id, role };
   
-      return jwt.sign({ data: payload }, accessSecret, { expiresIn: '5m' });
+      //return jwt.sign({ data: payload }, accessSecret, { expiresIn: '5m' });
+      return jwt.sign({ data: payload }, accessSecret, { expiresIn: '10s' });
     },
     signRefreshToken: function ({ email, _id }) {
         const payload = { email, _id };
     
-        return jwt.sign({ data: payload }, refreshSecret, { expiresIn: '10m' });
+        return jwt.sign({ data: payload }, refreshSecret, { expiresIn: '1m' });
+        //return jwt.sign({ data: payload }, refreshSecret, { expiresIn: '30s' });
+        //return jwt.sign({ data: payload }, refreshSecret, { expiresIn: '1hr' });
     },
 };

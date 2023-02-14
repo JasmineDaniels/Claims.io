@@ -1,0 +1,54 @@
+.about-bkgrd {
+    background-color: var(--LHCrimson);
+    color: white;
+    font-size: calc(10px + 2vmin);
+    text-align: center;
+    font-weight: bolder;
+    /* padding-bottom: 400px; */
+}
+
+.about-bkgrd li {
+    list-style: none;
+}
+
+.about-bkgrd ul{
+    padding-left: 0 !important;
+}
+
+.about-bkgrd p{
+    font-size: calc(5px + 2vmin);
+}
+
+.happy-happy{
+    /* padding-left: 35%; */
+    margin-left: 15%;
+    border-radius: 10px 10px !important;
+}
+
+.features{
+    background-color: white;
+    width: 850px;
+    /* width: 56.25rem; */
+    border-radius: 10px 10px !important;
+    
+}
+
+.development{
+    display: grid;
+    place-items: center;
+    background-color: white;
+    color: var(--LHRed);
+    width: fit-content;
+    border-radius: 10px 10px;
+    margin-right: 6%;
+}
+
+
+
+.development ul li:first-child{
+    text-decoration: underline;
+}
+
+
+
+

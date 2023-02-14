@@ -8,7 +8,7 @@ const verifyRoles = require('../../utils/verifyRoles');
 
 
 router.route('/')
-    .get(getAllEmployees)
+    .get(authMiddleware, getAllEmployees)
     .post(createNewEmployee) // verify Roles (Admin)?
 
 router.route('/claims') 

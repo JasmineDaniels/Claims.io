@@ -1,0 +1,18 @@
+.video-player{
+    /* width: 720px;
+    height: 350px; */
+    /* width: 810px;
+    height: 275px; */
+    width: 50.625rem;
+    height: 17.1875rem;
+    /* padding: 0; */
+}
+
+.rh5v-DefaultPlayer_component{
+    width: fit-content;
+}
+
+.emp-nav-border{
+    background-color: var(--LHYellow);
+    
+}

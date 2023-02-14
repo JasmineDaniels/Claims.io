@@ -1,3 +1,20 @@
+:root {
+  --LHCrimson: #730000;
+  --LHRed: #9b000a;
+  --LHGold: #ffbd00;
+  --LHYellow: #fadd8f;
+
+}
+
+/* html{
+  height: 100%;
+} */
+
+.main{
+  height: 100%;
+  padding-bottom: 400px;
+}
+
 .App {
   text-align: center;
 }
@@ -14,7 +31,7 @@
 }
 
 .App-header {
-  background-color: #730000;
+  background-color: var(--LHCrimson);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -28,6 +45,47 @@
   color: #ffbd00;
 }
 
+.content{
+  max-width: 75rem;
+  margin: auto;
+}
+
+@media (max-width: 576px){
+  .content{
+    max-width: 32.9375rem;
+    margin: auto;
+  }
+}
+
+@media (max-width: 768px){
+  .content{
+    max-width: 48rem;
+    margin: auto;
+  }
+}
+
+@media (max-width: 992px){
+  .content{
+    max-width: 62.25rem;
+    margin: auto;
+  }
+}
+
+
+@media (max-width: 1200px){
+  .content{
+    max-width: 75rem;
+    margin: auto;
+  }
+}
+
+@media (max-width: 1400px){
+  .content{
+    max-width: 87.5rem;
+    margin: auto;
+  }
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -35,4 +93,19 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+footer{
+  background-color: var(--LHYellow) !important; 
+  color: var(--LHRed) !important;
+  position: fixed; 
+  left: 0; 
+  bottom: 0; 
+  right: 0; 
+  margin-top: auto !important;
+}
+
+footer a i{
+  color: var(--LHRed) !important;
+  border-color: #730000 !important;
 }

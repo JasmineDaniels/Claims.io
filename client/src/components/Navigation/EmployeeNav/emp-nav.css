@@ -1,0 +1,25 @@
+.emp-nav ul{
+    padding-right: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 0 2rem;
+}
+
+.emp-nav-link{
+    color: var(--LHCrimson) !important;
+    font-size: 1.5rem !important;
+    text-decoration: none;
+}
+
+.emp-nav-link:hover{
+    color: var(--LHGold) !important;
+}
+
+hr {
+    font-weight: bolder;
+    border: 0 1rem;
+    color: var(--LHCrimson) !important;
+    border-color: var(--LHCrimson);
+}

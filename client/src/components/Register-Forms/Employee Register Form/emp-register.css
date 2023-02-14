@@ -1,0 +1,35 @@
+.offscreen {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+.hide{
+    display: none;
+}
+
+.visual{
+    background-color: var(--LHYellow) !important;
+}
+
+.crimson-bkgrd{
+    background-color: var(--LHCrimson) !important;
+    color: white;
+}
+
+.errfont{
+    color: rgb(219, 12, 12);
+}
+
+.valid{
+    color: rgb(123, 191, 21);
+}
+
+.invalid{
+    color: rgb(196, 6, 6);
+}

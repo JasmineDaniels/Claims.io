@@ -48,9 +48,18 @@ const createNewEmployee = async (req, res) => { // admin + auth
 
 const employeeLogin = async (req, res) => {
     try {
-        const employee = await Employee.findOne({
-            $or: [{ _id: req.body._id }, { email: req.body.email }]
-        }).exec();
+        
+        let employee;
+        // const employee = await Employee.findOne({
+        //     $or: [{ email: req.body.email }, { _id: req.body._id }]  
+        // }).exec();
+        if (req.body.email !== '') {
+            //employee = await Employee.findOne({ email: req.body.email }).lean();
+            employee = await Employee.findOne({ email: req.body.email }).exec();
+        } else if (req.body._id !== '') {
+            employee = await Employee.findOne({ _id: req.body._id }).exec();
+        } 
+
         if (!employee) {
             return res.status(400).json({ message: "Can't find this employee" });
         }
@@ -64,6 +73,8 @@ const employeeLogin = async (req, res) => {
 
         //save refresh token to DB
         employee.refreshToken = refreshToken;
+        //const result = await Employee.updateOne(employee , { refreshToken: refreshToken });
+
         const result = await employee.save();
 
         res.cookie('jwt', refreshToken, { //Put secure: true in PRODUCTION!
