@@ -14,9 +14,11 @@ const UserRegister = () => {
     const errRef = useRef();
 
     const [firstName, setFirstName] = useState('');
+    // eslint-disable-next-line
     const [firstNameFocus, setFirstNameFocus] = useState(false);
 
     const [lastName, setLastName] = useState('');
+    // eslint-disable-next-line
     const [lastNameFocus, setLastNameFocus] = useState(false);
 
 
@@ -76,8 +78,7 @@ const UserRegister = () => {
         }
 
         try {
-            const response = await axios.post(USER_REGISTER_URL,
-                JSON.stringify({ firstName, lastName, email, password: pwd }),
+            await axios.post(USER_REGISTER_URL, JSON.stringify({ firstName, lastName, email, password: pwd }),
                 {
                     headers: {
                         'Content-Type': 'application/json',
