@@ -25,6 +25,13 @@
     border-radius: 10px 10px !important;
 }
 
+@media (max-width: 576px){
+    .happy-happy{
+      display: grid;
+      place-items: center;
+    }
+  }
+
 .features{
     background-color: white;
     /* width: 850px; */
